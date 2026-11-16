@@ -2,7 +2,7 @@
 
 This guide describes the completed Warm-Transfer and Direct-Transfer studies and the portable
 code, data manifests, model bundles and results needed to inspect or repeat them.
-Run commands from the **IEEE_BIGDATA_26_CAMP_ARTIFACT repository root**.
+Run commands from the **IEEE_BIGDATA_26_ODE_CAMP_ARTIFACT repository root**.
 No command below pushes to Git, provisions cloud machines, or deletes existing runs.
 
 ## 1. What was actually executed

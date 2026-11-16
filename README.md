@@ -1,6 +1,6 @@
-# IEEE Big Data 2026 CAMP Artifact
+# ODE-CAMP: Online Deployment and Evaluation of CAMP
 
-Code, datasets, model checkpoints, execution records, and reproduction instructions for CAMP component experiments and online Bowtie2 deployment.
+ODE-CAMP contains code, datasets, model checkpoints, execution records, and reproduction instructions for CAMP component experiments and online Bowtie2 deployment.
 
 ## Contents
 
@@ -22,8 +22,8 @@ Code, datasets, model checkpoints, execution records, and reproduction instructi
 ## Download and verify
 
 ```bash
-git clone https://github.com/Nagarjuna-kandimalla/IEEE_BIGDATA_26_CAMP_ARTIFACT.git
-cd IEEE_BIGDATA_26_CAMP_ARTIFACT
+git clone https://github.com/Nagarjuna-kandimalla/IEEE_BIGDATA_26_ODE_CAMP_ARTIFACT.git
+cd IEEE_BIGDATA_26_ODE_CAMP_ARTIFACT
 python SCRIPTS/RQ5/live/verify_package.py --require-tracked
 python SCRIPTS/RQ5/live/models.py verify --deep
 ```

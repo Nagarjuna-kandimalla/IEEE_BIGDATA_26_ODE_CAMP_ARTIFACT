@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "date": "2026-11-16",
-  "description": "CAMP technical artifact: component and audit experiments, numerical result reproduction, four-stage live Bowtie2 execution, datasets and model/history/container bundles.",
+  "description": "ODE-CAMP technical artifact: component and audit experiments, numerical result reproduction, four-stage live Bowtie2 execution, datasets and model/history/container bundles.",
   "files": [
     {
       "path": ".gitattributes",
@@ -6520,8 +6520,8 @@
     },
     {
       "path": "README.md",
-      "bytes": 6992,
-      "sha256": "2595185675591b72099d6b7ae85ac113420aa2627586906fd6e357421512a4b9"
+      "bytes": 7036,
+      "sha256": "7ab83018918d348dce81edef6d9198360794d48b5e08629f4494a28257cb1649"
     },
     {
       "path": "RESULTS/README.md",
@@ -50870,8 +50870,8 @@
     },
     {
       "path": "SCRIPTS/RQ5/LIVE_EXPERIMENTS.md",
-      "bytes": 23057,
-      "sha256": "df029863aecff0ebd7564e410fd268cb05f8199677f5c72383137f19d40a6d6b"
+      "bytes": 23061,
+      "sha256": "741c9ae45b4c2b0bcca1795acb1387a326c7f2f0b11ac7134c0e5cc441e8d619"
     },
     {
       "path": "SCRIPTS/RQ5/README.md",
