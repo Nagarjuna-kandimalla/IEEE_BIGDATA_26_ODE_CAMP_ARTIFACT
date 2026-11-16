@@ -1,0 +1,128 @@
+\section{Experimental Method}
+\label{sec:experiments}
+\subsection{Populations and comparison conditions}
+We analyze component measurements from the CAMP evaluation~\cite{campArtifact}
+and new live transfer records~\cite{campTransferArtifact}. The memory-mapped
+file access and feature-ablation studies use 33,516 tasks from GATK,
+Minimap2, Sarek, Seqinspector, Taxprofiler, and Viralmetagenome. We use a
+split of 28,490 development tasks and 5,026 evaluation tasks, using
+chronological ordering within each workflow.
+
+We first evaluate the contribution of memory-mapped file accesses by
+comparing consumption measured through explicit reads alone with
+consumption measured through explicit reads and memory-mapped accesses.
+Both variants use the same evaluation tasks and measured memory peaks.
+Each variant constructs its consumption history and trains its consumption
+and memory models, with allocation policies selected independently on
+development data. Table~\ref{tab:mmap} reports underallocation counts, total
+requested memory, and median absolute percentage error (MdAPE). MdAPE
+is the median absolute percentage error between predicted median peak
+memory and measured peak memory.
+
+\label{sec:training-calibration}
+We then examine four feature variants: Access, which uses static
+information and peak-memory history; Access with consumption history
+$\mathbf{h}_{c,t}$; Access with predicted consumption $\hat c_t$; and CAMP,
+which includes both consumption features. The retained LightGBM ensembles
+and development-selected allocation policies are preserved.
+Table~\ref{tab:features} reports underallocation counts, MdAPE, total
+requested memory, and unused memory-time $W$ for these variants using
+their recorded model configurations. The $W$ calculation uses tasks with
+available runtimes.
+
+The feature ablation runs on a 16-vCPU elastic Slurm worker, with 28~GB
+of memory allocated to the job. The evaluation tasks, configured seeds,
+and model hyperparameters remain unchanged from the original evaluation.
+The reproduced Access and CAMP configurations yield 85 and 30
+underallocations, respectively, compared with 87 and 31 reported in
+WORKS~\cite{camp2026works}. We attribute these small differences to the
+changed execution environment.
+
+\begin{figure*}[!t]
+\centering
+\includegraphics[width=\textwidth]{\campReadyPath result_assets/audit_tradeoffs.pdf}
+\caption{Two separate auditing studies. (a) Downstream underallocation-rate difference (selective minus random, in percentage points) over 17,067 tasks after the first update; negative values favor selective auditing. Bars are paired 95\% bootstrap confidence intervals. (b) Estimated auditing cost on 5,026 tasks with CAMP allocations fixed (5--50\% budgets shown); bars are 95\% bootstrap confidence intervals of five seed-level means. Panel (b) measures auditing overhead separately from the downstream replay in (a).}
+\label{fig:audit}
+\end{figure*}
+
+\subsection{Downstream allocation and auditing cost}
+Following RQ4 in WORKS~\cite{camp2026works}, we examine how selective
+auditing affects subsequent memory allocations. Two identically
+initialized CAMP predictors receive measurements selected through
+selective or random auditing under equal budgets. Each predictor updates
+between successive task batches. We compare underallocation counts and
+total requested memory on tasks predicted after the first update, across
+audit budgets of 5\%, 10\%, 20\%, 30\%, and 50\%, with five sampling seeds.
+We retain 20\% as the primary downstream comparison.
+
+A separate study estimates auditing cost while keeping the published CAMP
+allocations fixed. At audit budget $B$, the fraction of tasks audited,
+let $C_B$ denote the extra reserved memory-time caused by auditing, in
+GiB-hours. For task $t$, $\hat y_t$ is CAMP's memory request in GiB;
+$d_t^{\rm audit}$ and $d_t^{\rm base}$ are its runtimes in hours with and
+without auditing. Summing over audited tasks ($q_t=1$) gives
+\begin{equation}
+ C_B=\sum_{t:q_t=1}\hat y_t\max(d_t^{\rm audit}-d_t^{\rm base},0).
+\label{eq:audit_cost}
+\end{equation}
+The maximum counts only positive runtime overhead. Prediction, retraining,
+and retry costs are excluded. Varying $B$ changes which tasks incur auditing
+cost; the memory requests remain fixed. We evaluate costs at 5\%, 10\%,
+15\%, 20\%, 25\%, 30\%, 50\%, and 100\% audit budgets. We report 95\% bootstrap confidence
+intervals by resampling the five seed-level selective-minus-random
+differences for downstream comparisons and the five seed-level cost
+estimates for auditing cost.
+
+\subsection{Live deployment and transfer protocol}
+\label{sec:live-method}
+The live study uses Bowtie2 with Nextflow and Slurm. Each stage executes
+6,000 tasks across seven processes and produces 1,974 aligned chunks.
+The original inputs are 38 paired-end sequencing runs from European
+Nucleotide Archive (ENA) study PRJEB11501; the new inputs are 38 paired-end
+sequencing runs from PRJNA486148. Selection uses metadata and compressed
+size, without execution outcomes. The inputs total 15.14 and 15.20~GiB,
+with no shared run IDs, sample IDs, file URLs, or FASTQ checksums. Read lengths nevertheless differ: 34 new runs
+use 75-base reads and four use 102-base reads; original reads are 102 bases.
+
+Nextflow configuration overlays enable the tracing described in
+Section~\ref{sec:history}. Bowtie2's process-specific memory functions send
+task metadata to CAMP's prediction service and return memory requests for
+Slurm submission. Completion callbacks record task outcomes, and a
+background learner publishes updated models for later predictions. This
+integration preserves analytical tool commands while requiring
+workflow-specific metadata bindings and deployment settings.
+
+\emph{Warm-Transfer} executes cold, repeated-input warm, and new-input
+stages in sequence. Cold begins with the seed-1996 offline model and
+28,490 observations from other workflows, with no Bowtie2 history.
+Each subsequent stage inherits the preceding terminal model, history,
+and calibration. \emph{Direct-Transfer} starts the same new inputs from
+that exact cold checkpoint, skipping the warm pass. Cold is not rerun.
+The new-input branches therefore inherit 12,000 and 6,000 Bowtie2
+observations, respectively. Each stage uses a fresh workflow directory;
+completed tasks are not reused through Nextflow's cache.
+
+A successful task outcome is eligible for model fitting when both
+peak-memory and consumption measurements are available. The background
+learner retrains after every 128 eligible outcomes. Completed-task records
+enter CAMP's history
+independently of these retraining updates. The latest 64 observations are
+held out from model fitting and used to calibrate predictions from the
+corresponding model version. A final update at the end of each stage
+incorporates the remaining eligible outcomes. Failed attempts are retained
+for diagnosis but excluded from model fitting. Both transfer branches
+continue learning online and audit every task; the comparison therefore
+evaluates the effect of an additional warm pass.
+
+Three 16-vCPU, 64-GiB worker nodes expose 50~GiB each to Slurm. The control
+node has 16 vCPUs and 64~GiB for Warm-Transfer, but 8 vCPUs and 32~GiB for
+Direct-Transfer; the learner retains four CPUs. The software versions are
+Nextflow 25.10.7, Bowtie2 2.4.2, and samtools 1.20. We calculate unused memory-time $W$ using CAMP's initial memory request
+and the measured peak memory and runtime of the final successful attempt.
+$W$ uses the measured runtime of successful attempts. Failed attempts
+are excluded, and auditing, prediction, and retraining costs are not
+separately accounted for.
+
+There is one execution per branch and one new input study. Differences
+in task-completion order can change the history available for subsequent
+predictions and model updates.

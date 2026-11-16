@@ -1,0 +1,23 @@
+PASS: 1264 verified model blobs; deep=True
+{
+  "status": "PASS",
+  "stages": 4,
+  "tasks_per_stage": 6000,
+  "output": "/tmp/camp rq5 portable check 276gks0p/recomputed"
+}
+/tmp/camp rq5 portable check 276gks0p/clean relocated workspace
+/tmp/camp rq5 portable check 276gks0p/saved cold relocated
+{
+  "status": "PASS",
+  "tests": [
+    "All four stage metrics recomputed independently",
+    "All model/container blobs decoded and verified separately",
+    "Fresh path with spaces configured; full frozen source hashes pass",
+    "Offline seed preflight: zero Bowtie2 history",
+    "Slurm API simulated: sequential gates and shared-cold parent; no real jobs submitted",
+    "Duplicate submission refused",
+    "Recorded cold restored at another path with matching history/calibration and SQLite integrity",
+    "Saved-cold branch omits cold/warm executions"
+  ],
+  "scope": "Packaging, preflight, configuration and simulated orchestration checks. A new full Slurm biological rerun was NOT performed."
+}

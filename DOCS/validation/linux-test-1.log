@@ -1,0 +1,8 @@
+test_fetch_verifies_pair_and_rejects_bad_partial (test_io_and_routing.PortableTests) ... ok
+test_task_routing_matches_partition_and_adds_allowance (test_io_and_routing.PortableTests) ... ok
+
+----------------------------------------------------------------------
+Ran 2 tests in 0.177s
+
+OK
+PASS: 2 FASTQs verified

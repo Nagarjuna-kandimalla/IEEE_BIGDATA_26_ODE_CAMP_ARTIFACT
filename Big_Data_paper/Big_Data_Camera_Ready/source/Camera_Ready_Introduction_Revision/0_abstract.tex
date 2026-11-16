@@ -1,0 +1,24 @@
+\begin{abstract}
+Scientific workflow schedulers reserve memory before execution, balancing
+insufficient allocations against wasted capacity. Consumption-Aware Memory
+Prediction (\toolname), introduced in our WORKS paper, uses completed tasks'
+consumption and memory observations to inform later requests. We examine
+its deployment through measurement and feature ablations, downstream
+selective-auditing analysis, auditing-cost estimation, and live Bowtie2
+experiments. The live study evaluates repeated inputs and transfer to a
+separate input study, with 6,000 tasks per stage. Repeating the original
+inputs reduces aggregate requests by 75.34\%, while unused
+memory-time falls from 32.86089 to 0.01847~GiB-hours. On new inputs, continuing
+from this warm state requests 319.22~GiB with 0.12805~GiB-hours of
+unused memory-time; continuing directly from the shared cold
+checkpoint requests 343.56~GiB with 0.22109~GiB-hours of unused memory-time.
+Both branches keep learning online.
+Together, the experiments characterize the benefits, measurement costs,
+and limits of consumption feedback under repeated and previously unseen
+workflow inputs.
+\end{abstract}
+
+\begin{IEEEkeywords}
+scientific workflows, online memory allocation, consumption feedback,
+eBPF, selective auditing
+\end{IEEEkeywords}

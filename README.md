@@ -1,248 +1,95 @@
 # IEEE Big Data 2026 CAMP Artifact
 
-Research artifact for **Online Deployment and Evaluation of Consumption-Aware
-Memory Allocation for Scientific Workflows**.
+Reproduction package for **Online Deployment and Evaluation of Consumption-Aware Memory Allocation for Scientific Workflows**.
 
-CAMP uses task metadata, prior peak-memory observations, consumption history,
-and predicted consumption to choose task memory requests. This repository
-supports the Big Data extension's component evidence, auditing-cost analysis,
-and online-deployment study. It includes the inherited WORKS implementation and
-retained measurements so the analyses do not depend on a separate checkout.
+This repository contains the current six-page manuscript and the code, retained measurements, input manifests, and model checkpoints required for its component, auditing, and live-deployment experiments. It preserves the CAMP implementation and offline cohort needed by these experiments. Historical directory labels (`RQ5`, `W2`, `W3`, `W5`) are retained so executable paths stay consistent.
 
-The included reproduction routes cover signal and feature ablations, selective
-auditing, audit-cost accounting, Bowtie2 cold/warm execution records, manuscript
-tables and figures, and a standalone Ponder memory-sizing adapter.
-
-## Start here
+## Get the artifact
 
 ```bash
 git clone https://github.com/Nagarjuna-kandimalla/IEEE_BIGDATA_26_CAMP_ARTIFACT.git
 cd IEEE_BIGDATA_26_CAMP_ARTIFACT
+python SCRIPTS/RQ5/live/verify_package.py --require-tracked
 ```
 
-If the repository is private, cloning requires access to the repository.
-All commands below start at this root unless explicitly stated otherwise.
-Generated environments, model checkpoints, raw FASTQs, container images, and
-Nextflow work directories should remain outside the committed artifact.
+All commands start at this repository root unless stated otherwise. Use `python3` where `python` is unavailable. Omit `--require-tracked` for a ZIP download without Git metadata. Verify before regeneration; output metadata can change PDF bytes.
 
-| Goal | Route | Requires live workflow execution? |
+## Reproduce the paper's tables, figures, and numerical results
+
+Use Python 3.10+ for analysis. Create an environment outside the checkout:
+
+```bash
+python3 -m venv /path/to/bigdata-analysis
+/path/to/bigdata-analysis/bin/python -m pip install -r SCRIPTS/BIGDATA/requirements-analysis.txt
+/path/to/bigdata-analysis/bin/python SCRIPTS/BIGDATA/reproduce_paper.py
+```
+
+On Windows, use the environment's `Scripts/python.exe`. The command verifies the release, recomputes all four live stages, checks the component and audit measurements, regenerates both manuscript figures and table rows, and writes an isolated copy of the paper under `build/reproduction/`. It does not alter the packaged reference files, train models, or execute workflows.
+
+To also compile the paper, append `--engine tectonic` (Tectonic 0.17) or `--engine latexmk` (an installed TeX distribution). Use `--executable /path/to/compiler` if the compiler is not on PATH. First use of Tectonic may download TeX resources. The final PDF is `build/reproduction/compiled/camp_bigdata.pdf`; the numerical verification report is `build/reproduction/reproduction.json`.
+
+The source and included preview are in [the camera-ready directory](Big_Data_paper/Big_Data_Camera_Ready/source/Camera_Ready_Introduction_Revision/). For Overleaf, upload `Big_Data_paper/Big_Data_Camera_Ready/` and select `source/Camera_Ready_Introduction_Revision/INTRODUCTION_REVISION_PREVIEW.tex`. The wrapper applies the same T1 font encoding as the local build.
+
+## What each paper result uses
+
+| Paper evidence | Inputs and executable analysis | Reference result |
 |---|---|---|
-| Verify the downloaded snapshot | A: integrity verification | No |
-| Regenerate Big Data tables and figures | B: packaged evidence | No |
-| Build the manuscript | C: paper build | No |
-| Recompute reviewer analyses or refit their models | D: analysis / fresh training | No workflow execution; fresh fitting can be expensive |
-| Reproduce the retained Bowtie2 cold/warm deployment | E: live deployment | Yes, Linux and the documented workflow stack |
-| Test or use the extracted Ponder predictor | F: standalone baseline | No scheduler needed |
+| Table I: explicit reads vs reads + mapped accesses | [W3](Reviewer_Feedbacks/W3/README.md); retained predictions for 5,026 tasks | 32 vs 30 underallocations; 41,853 vs 34,271 GiB requested |
+| Table II: four feature configurations | [Feature ablation](Reviewer_Feedbacks/chat_ablation/README.md) | 85 / 46 / 52 / 30 underallocations; native configurations differ in routing |
+| Figure 1(a): selective vs random downstream auditing | [W2](Reviewer_Feedbacks/W2/README.md); five budgets and five seeds | At 20%: 265.8 vs 305.8 mean underallocations on 17,067 post-update tasks; paired interval includes zero |
+| Figure 1(b): auditing cost | [W5](Reviewer_Feedbacks/W5/README.md); paired runtimes and frozen audit selections | 5.999 / 24.025 / 66.534 GiB-h at 5 / 20 / 50%; 139.680 GiB-h at 100% |
+| Figure 2 and live result paragraphs | [Live reproduction guide](SCRIPTS/RQ5/LIVE_EXPERIMENTS.md); four stages, 6,000 tasks each | See table below |
 
-## Directory map
+Published WORKS endpoints (87/31) remain labeled separately from the four-feature rerun (85/46/52/30); do not combine their counts. Underallocation means a request below the measured peak, not an observed OOM. Missing runtimes for 449 offline evaluation tasks contribute zero to unused memory-time, consistently across feature variants. Auditing cost is paired positive runtime overhead multiplied by the fixed CAMP request; it is not an end-to-end net saving.
+
+| Live stage | Requested GiB | Peak-sum GiB | Unused GiB-h | First-request coverage |
+|---|---:|---:|---:|---:|
+| Original cold | 977.7871 | 229.3280 | 32.86089 | 99.53% |
+| Original warm | 241.1211 | 229.3809 | 0.01847 | 99.58% |
+| Warm-Transfer, new input | 319.2236 | 273.4394 | 0.12805 | 94.15% |
+| Direct-Transfer, new input | 343.5586 | 277.9579 | 0.22109 | 95.78% |
+
+Warm-Transfer executes cold, then warm on original inputs, then new inputs. Direct-Transfer branches from the **same cold checkpoint** and executes the same new inputs without the intervening warm pass. Both transfer arms continue online learning, and all live tasks are audited. Selective auditing is evaluated separately by replay.
+
+Requests, coverage, margins, and unused memory-time exclude the separate **128 MiB execution allowance**. Recorded zero OOMs apply to execution with that allowance. Request/peak sums are not simultaneous occupancy. Unused memory-time uses successful-attempt runtimes and excludes failed attempts, audit, inference, and retraining cost. The two new-input arms have identical flagstat summaries for all 1,974 alignment chunks.
+
+## Retrain and execute experiments
+
+Analysis from recorded measurements and fresh execution are separate routes:
+
+- **Read/mapped-access models:** follow [W3](Reviewer_Feedbacks/W3/README.md), including its `fresh_training.py` command in a new destination.
+- **Four feature models:** follow [feature ablation](Reviewer_Feedbacks/chat_ablation/README.md), including `run_full_ablation.sh` in its pinned environment.
+- **Selective-auditing replay:** follow [W2](Reviewer_Feedbacks/W2/README.md), including `fresh_training.py` for the full model/replay experiment.
+- **Auditing costs:** [W5](Reviewer_Feedbacks/W5/README.md) recomputes paired retained measurements; no new training is needed.
+- **Bowtie2 live study:** follow [LIVE_EXPERIMENTS.md](SCRIPTS/RQ5/LIVE_EXPERIMENTS.md) for exact input acquisition, checkpoint restoration, cluster configuration, full four-stage execution, or a saved-cold Direct-Transfer repeat. The guide also covers rebuilding the offline seed from the packaged 33,516-task cohort.
+
+Full live execution requires Linux, Slurm, Nextflow 25.10.7, Apptainer, BCC/eBPF privileges and the pinned Python 3.9 model environment. It is not a Windows execution route or a single-machine emulation. Raw FASTQ inputs (~30 GiB) are downloaded from exact ENA URLs and checked against supplied MD5/size metadata. Large BAM/work files are regenerated. The exact reference snapshot, initial/terminal model-history bundles, matching databases and Bowtie2/samtools container images are included in a compressed content-addressed store:
+
+```bash
+python SCRIPTS/RQ5/live/models.py list
+python SCRIPTS/RQ5/live/models.py verify --deep
+```
+
+Fresh hardware, completion order and asynchronous training may change numerical outcomes. The retained records reproduce the reported numerical realization; fresh runs test the procedure and must report their measured results.
+
+## Repository map
 
 ```text
-IEEE_BIGDATA_26_CAMP_ARTIFACT/
-  README.md                         Big Data entry point (this file)
-  DOCS/                             Artifact contents, verification, source provenance
-  Big_Data_paper/
-    Big_Data_Camera_Ready/source/
-      Camera_Ready/                 TeX, bibliography, generated assets
-      IEEEtran.cls                  IEEE conference document class
-      IEEEtran.bst                  IEEE bibliography style
-  SCRIPTS/
-    BIGDATA/                        Integrity verification and paper build helpers
-    BASELINES/ponder/               Standalone original-code Ponder predictor
-    RQ1/ ... RQ5/                   Inherited data, modeling, figure, live-run code
-  Reviewer_Feedbacks/
-    W1/                             Earlier matched-budget/coverage analysis
-    W2/                             Selective auditing and downstream allocation
-    W3/                             Read versus read+mmap ablation
-    W5/                             Audit-cost accounting
-    chat_ablation/                  Four-feature and fixed-route analyses
-  DATA/                             Packaged offline cohorts and assignments
-  RESULTS/                          Retained WORKS measurements and figures
-  WORKFLOWS/                        Bowtie2 and six-workflow integration
-  AUDIT/                            eBPF/STRACE collection and processing
-  ARTIFACT_MANIFEST.json             Hashes of the packaged release files
+Big_Data_paper/   Current manuscript, bibliography, figures and figure builders
+Reviewer_Feedbacks/{W2,W3,W5,chat_ablation}/
+                  Self-contained analyses, training inputs and reference predictions
+SCRIPTS/BIGDATA/  Paper reproduction/build helpers and release regression tests
+SCRIPTS/RQ5/      Offline-seed build and live execution/learning implementation
+DATA/RQ2/        Source cohort needed to rebuild the offline seed
+DATA/RQ5/        Fixed split, exact input manifests, model/history/container store
+RESULTS/RQ5/     Four live-stage records and compact transfer snapshots
+WORKFLOWS/       Bowtie2 workflow and its common integration helpers
+AUDIT/           Consumption-measurement helpers and prerequisites
+DOCS/            Scope, provenance, changes and verification evidence
 ```
 
-Keeping the inherited directory names preserves working data paths and
-reproduction scripts. An `RQ*` directory is inherited context, not automatically
-a new Big Data contribution. Detailed manuscript provenance is recorded in
-[RESULTS_PROVENANCE.md](Big_Data_paper/Big_Data_Camera_Ready/source/Camera_Ready/RESULTS_PROVENANCE.md).
+## Verification and provenance
 
-## A. Verify the packaged snapshot
+See [verification](DOCS/VERIFICATION.md) for checks actually run and their limits, and [release changes](DOCS/REPRODUCTION_CHANGES.md) for fixes to fresh-training fallback handling, incremental history publication and learner defaults. These fixes do not replace or rewrite retained experimental outcomes.
 
-Python 3.9+ and its standard library are sufficient:
-
-```bash
-python SCRIPTS/BIGDATA/verify_artifact.py --check-gzip
-```
-
-This verifies every file listed in `ARTIFACT_MANIFEST.json`, checks packaged gzip
-streams, and fails on missing or modified files. Run it before regeneration:
-newly generated PDFs/figures may contain different metadata even when their
-scientific values agree. The manifest describes the delivered snapshot; do not
-replace it to conceal an unexpected change.
-
-## B. Regenerate the Big Data tables and figures
-
-This is the shortest scientific reproduction route. It reads packaged task
-predictions, audit selections/timings, and live task/attempt records; it does
-not retrain CAMP or execute a workflow.
-
-Use Python 3.10+ for this analysis-only environment:
-
-```bash
-python3 -m venv /path/outside/repo/bigdata-analysis-env
-/path/outside/repo/bigdata-analysis-env/bin/python -m pip install -r SCRIPTS/BIGDATA/requirements-analysis.txt
-/path/outside/repo/bigdata-analysis-env/bin/python Big_Data_paper/Big_Data_Camera_Ready/source/Camera_Ready/build_result_assets.py
-```
-
-On Windows, use the environment's `Scripts/python.exe` instead of `bin/python`.
-The historical training packages have their own pinned Python 3.9 environments;
-do not assume this plotting environment replaces those environments.
-
-Outputs are under `Big_Data_paper/Big_Data_Camera_Ready/source/Camera_Ready/result_assets/`:
-
-- `mmap_table.tex`, `feature_table.tex`, and `bowtie_table.tex` plus their row files;
-- `audit_tradeoffs.pdf/.png` and `bowtie_margins.pdf/.png`;
-- `result_provenance.json`, with input hashes and computed numerical summaries.
-
-The builder verifies paired task identities, peaks, allocation counts, request
-totals, downstream summary consistency, all retained audit-budget/seed costs,
-and Bowtie2 task/attempt statistics. It does not imply fresh model fitting.
-
-### Expected evidence and interpretation
-
-| Study | Packaged result / population | Interpretation |
-|---|---|---|
-| Read versus read+mmap | 32 versus 30 below-peak requests on 5,026 tasks | Separate signal-ablation experiment |
-| Four feature views | Native configurations: 85 / 46 / 52 / 30 | Native rows differ in routing; use fixed-route tables for feature interpretation |
-| Published WORKS endpoints | 87 versus 31 | Frozen published result, distinct from the later reproduction |
-| Selective downstream auditing | At 20%: mean 265.8 versus 305.8 events, with 2.4% more requests | Replay; retained uncertainty interval includes zero |
-| Audit accounting | Fixed gross saving 23.59556 GiB-h; mean net +17.597 / +11.161 / +5.913 / -0.429 at 5/10/15/20% budgets | Fixed-saving accounting; excludes full learning/inference/retry cost |
-| Bowtie2 cold/warm | 6,000 tasks each; requests 898.3857 versus 251.9268 GiB | Cold/warm executions on repeated inputs |
-
-Underallocation is a request below recorded peak, not an observed OOM.
-Recorded first-attempt OOM flags for the retained Bowtie2 runs are zero.
-Summed requests are not simultaneous node occupancy. Missing-runtime conventions
-and failure-cost exclusions are documented in manuscript provenance.
-
-## C. Build the paper
-
-The manuscript source is
-[Camera_Ready/main.tex](Big_Data_paper/Big_Data_Camera_Ready/source/Camera_Ready/main.tex).
-The compiled [PDF](Big_Data_paper/Big_Data_Camera_Ready/source/Camera_Ready/CAMERA_READY_PREVIEW.pdf)
-is included alongside the source.
-
-With an existing TeX installation, use the isolated build helper:
-
-```bash
-python SCRIPTS/BIGDATA/build_paper.py --engine latexmk
-```
-
-Alternatively, with Tectonic 0.17 available:
-
-```bash
-python SCRIPTS/BIGDATA/build_paper.py --engine tectonic
-```
-
-Both build in ignored `build/paper/` and produce `build/paper/camp_bigdata.pdf`.
-The helper copies the original project layout and leaves the manuscript source
-untouched. The Tectonic route uses a T1-font wrapper to match the verified preview.
-Tectonic may download TeX resources on first use. `--executable` can select an
-explicit compiler path. For Overleaf, upload the contents of
-`Big_Data_paper/Big_Data_Camera_Ready/` and choose
-`source/Camera_Ready/main.tex` as the main file.
-
-## D. Recompute analyses or train fresh models
-
-Choose the relevant package; each has local data, retained references, and
-separate instructions distinguishing analysis from fresh fitting:
-
-| Evidence | Instructions | Fresh-training entry point |
-|---|---|---|
-| mmap contribution | [W3](Reviewer_Feedbacks/W3/README.md) | `fresh_training.py NEW_DIRECTORY --threads 8` |
-| Four feature variants | [chat_ablation](Reviewer_Feedbacks/chat_ablation/README.md) | Follow its `run_full_ablation.sh` section |
-| Downstream selective auditing | [W2](Reviewer_Feedbacks/W2/README.md) | `fresh_training.py NEW_DIRECTORY --workers 2 --threads 8` |
-| Audit-cost accounting | [W5](Reviewer_Feedbacks/W5/README.md) | Analysis only; no model training required |
-| Earlier matched-budget comparison | [W1](Reviewer_Feedbacks/W1/README.md) | Follow its package instructions |
-
-For example, on Linux with Python 3.9 and the documented LightGBM prerequisites:
-
-```bash
-cd Reviewer_Feedbacks/W3
-bash setup.sh
-bash reproduce.sh
-```
-
-Its standard reproduction recomputes from retained predictions. A genuinely
-fresh fit is a separate command from that directory:
-
-```bash
-.venv/bin/python fresh_training.py /path/outside/repo/new-w3-run --threads 8
-```
-
-Fresh destinations must not already exist. Numerical variation across hardware
-must be evaluated, not replaced with frozen counts. Retained package verification
-logs describe earlier verification; [this repository's verification record](DOCS/VERIFICATION.md)
-states what was actually executed during this packaging pass.
-
-## E. Live Bowtie2 experiments and retained cold/warm deployment
-
-The completed Warm-Transfer and Direct-Transfer studies now include portable run code, offline and
-terminal model/history bundles, exact tool images, ENA input manifests and
-complete scientific result records. Start with
-[**the live experiment reproduction guide**](SCRIPTS/RQ5/LIVE_EXPERIMENTS.md).
-Warm-Transfer is the main cold/warm/new-input experiment; Direct-Transfer branches from its exact
-cold checkpoint and skips warm.
-
-The older retained cold/warm figures remain a separate reproduction route.
-
-
-Follow [SCRIPTS/RQ5/README.md](SCRIPTS/RQ5/README.md) from its full-run entry point.
-It describes initial-state rebuilding, causal online feedback, source inputs,
-execution, artifact collection, and plotting. The original run used 12 task
-workers plus one controller/learner worker. The inherited launch defaults describe
-that deployment; they are not ready-made single-node AWS defaults.
-
-The Bowtie2 workflow and chunk mapping come from the WORKS source revision
-recorded in [source provenance](DOCS/SOURCE_MANIFEST.json).
-
-Raw sequence data and deployable terminal model checkpoints are not bundled.
-Public-input acquisition and initial-state rebuild instructions are included.
-The retained CSVs cannot substitute for an actual trained checkpoint.
-
-## F. Ponder memory-sizing adapter
-
-[SCRIPTS/BASELINES/ponder](SCRIPTS/BASELINES/ponder/README.md) compiles nine unchanged
-upstream Java predictor files pinned to commit `3046e19`. Python's standard library
-launches the adapter; an existing JDK 11+ is required. No Kubernetes installation
-is needed. Dependency downloads are version- and checksum-pinned.
-
-```bash
-python SCRIPTS/BASELINES/ponder/ponder.py test
-python SCRIPTS/BASELINES/ponder/ponder.py run --events events.tsv --output ponder_predictions.tsv
-```
-
-The test suite contains 123 checks, including 48 exact comparisons with direct
-original-core predictions. This verifies the adapter on synthetic histories;
-it is not a CAMP/Ponder performance result. The README specifies the event schema,
-causal ordering, source-history seeding, defaults, caps, and failure handling.
-
-The chosen configuration keeps Ponder's internal offset and omits the additional
-outer offset (`ponder-offset=none`). Bare upstream `ponder` has an additional
-default offset wrapper. State this choice in any comparison; do not claim an
-exact reproduction of the original scheduler experiments.
-
-## Provenance and licensing
-
-This artifact derives from [IEEE_WORKS_26_ARTIFACT](https://github.com/Nagarjuna-kandimalla/IEEE_WORKS_26_ARTIFACT).
-The source commit, copied-file hashes, exclusions, and workflow choice are in
-[DOCS/SOURCE_MANIFEST.json](DOCS/SOURCE_MANIFEST.json).
-Duplicate ZIP exports, local caches, `Not_Needed/`, and the acceptance-email PDF
-were excluded. Manuscripts, scientific documentation, review-response material,
-and reproduction packages are included. See the [contents guide](DOCS/CONTENTS.md).
-
-Preserve citations to WORKS for reused methods/results and identify new
-experiments separately. No DOI or final publication metadata has been invented.
-Ponder's copied code and adapter carry GPL-3.0-or-later with notices and source.
-Other third-party files retain their existing notices. No new blanket license
-is imposed on CAMP; see [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
+The CAMP method and reused measurements derive from [IEEE_WORKS_26_ARTIFACT](https://github.com/Nagarjuna-kandimalla/IEEE_WORKS_26_ARTIFACT); cite WORKS as recorded in the manuscript. [Source provenance](DOCS/SOURCE_MANIFEST.json) records the original import, and [paper provenance](Big_Data_paper/Big_Data_Camera_Ready/source/Camera_Ready_Introduction_Revision/RESULTS_PROVENANCE.md) maps this paper to its retained evidence. Original import inventories are historical, not the current package inventory: `ARTIFACT_MANIFEST.json` defines this release. See [third-party notices](THIRD_PARTY_NOTICES.md).

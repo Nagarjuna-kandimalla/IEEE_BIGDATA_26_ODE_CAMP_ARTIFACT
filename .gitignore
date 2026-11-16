@@ -34,16 +34,16 @@ work-*/
 .apptainer/
 .singularity/
 
-# Regenerated experiment intermediates
-DATA/RQ2/generated/
-SCRIPTS/RQ2/models/
-SCRIPTS/RQ2/results/
-SCRIPTS/RQ3/data/generated/
-SCRIPTS/RQ3/harness/data/generated/
-SCRIPTS/RQ3/harness/models/
-SCRIPTS/RQ3/harness/results/
-SCRIPTS/RQ3/models/
-SCRIPTS/RQ3/results/
-SCRIPTS/RQ3/source_sizey/
-SCRIPTS/RQ4/results/
+# Local compilation and experiment outputs
+.build/
+*.aux
+*.bbl
+*.blg
+*.log
+*.xdv
+*.synctex.gz
+SCRIPTS/RQ5/experiment_template/**/models/
+SCRIPTS/RQ5/experiment_template/**/results/
 
+# Release verification evidence
+!DOCS/validation/*.log

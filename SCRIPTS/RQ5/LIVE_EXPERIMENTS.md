@@ -9,8 +9,8 @@ No command below pushes to Git, provisions cloud machines, or deletes existing r
 
 | Experiment | Sequence | Starting state | Paper role |
 |---|---|---|---|
-| Warm-Transfer | fresh original cold → original warm → new input | Offline seed with no Bowtie2 history | Main live result |
-| Direct-Transfer | **reuse the exact Warm-Transfer terminal cold checkpoint → new input** | Warm-Transfer cold model, history and calibration | Extra-warm-pass ablation |
+| Warm-Transfer | fresh original cold â†’ original warm â†’ new input | Offline seed with no Bowtie2 history | Main live result |
+| Direct-Transfer | **reuse the exact Warm-Transfer terminal cold checkpoint â†’ new input** | Warm-Transfer cold model, history and calibration | Extra-warm-pass ablation |
 
 Direct-Transfer did **not** rerun cold. It did not inherit Warm-Transfer's warm or new-input model.
 The two new-input arms share the Warm-Transfer cold ancestor; Warm-Transfer additionally executes
@@ -58,7 +58,7 @@ base training frame**, not just `current_model.json` or one joblib file.
 |---|---|
 | `SCRIPTS/RQ5/live/` | Portable configuration, Slurm submission, data fetching, restoration and result recomputation |
 | `SCRIPTS/RQ5/live/runtime/` | Controller, routing, validated handoff, verified archive, health monitor, BPF tracer and isolation launcher |
-| `SCRIPTS/RQ5/experiment_template/` | Exact scientific implementation used in the clean runs: model fitting, allocation, history, calibration and wrappers |
+| `SCRIPTS/RQ5/experiment_template/` | Scientific implementation used in the runs, with documented reproduction fixes: model fitting, allocation, history, calibration and wrappers |
 | `WORKFLOWS/bowtie2/`, `WORKFLOWS/common/` | Workflow and normalization/static-manifest code |
 | `DATA/RQ5/live/inputs/` | Original/new task manifests, ENA metadata and new-study selection record |
 | `DATA/RQ5/live/models/` | Losslessly compressed, deduplicated initial/terminal model-history bundles **and exact SIF containers**, with per-file hashes |
@@ -110,8 +110,7 @@ exactly. This checks summary agreement, not byte identity of the BAM files.
 Only one clean execution per arm and one new study are evaluated. Completion
 order affects online updates, and measured memory, consumption and timing vary.
 No bitwise/numerical equality, statistical significance, or paper-number match is
-promised for a fresh run. Original retained `RESULTS/RQ5/csv/` belongs to an older
-cold/warm deployment and remains separate from these new records.
+promised for a fresh run. The repository contains only the cold/warm deployment used in this paper.
 
 ## 4. Fast route: verify and regenerate numbers (no Slurm)
 
@@ -133,13 +132,11 @@ flagstat files. Outputs are `results.json` and `metrics.tsv`; reference output i
 under `RESULTS/RQ5/live_experiments/recomputed/`.
 The deep model check verifies compressed parts **and decoded original bytes**.
 
-To regenerate the manuscript tables/figure, install the analysis dependencies:
+To regenerate the manuscript figures and tables, use Python 3.10+ with
+`SCRIPTS/BIGDATA/requirements-analysis.txt`, then run:
 
 ```bash
-python3.9 -m venv /tmp/camp-rq5-analysis
-/tmp/camp-rq5-analysis/bin/pip install -r SCRIPTS/RQ5/requirements.txt
-/tmp/camp-rq5-analysis/bin/python \
-  Big_Data_paper/Big_Data_Camera_Ready/source/Camera_Ready/build_live_assets.py
+python SCRIPTS/BIGDATA/reproduce_paper.py
 ```
 
 ## 5. Inspect or continue from a recorded checkpoint
@@ -171,7 +168,7 @@ Validate a restored cold checkpoint with the pinned environment:
 ```
 
 Expected: PASS, 6,000 Bowtie2 history/training/SQLite rows and 64 calibration
-rows matching the cold checkpoint’s recorded model version. Other snapshot counts are in §1.
+rows matching the cold checkpointâ€™s recorded model version. Other snapshot counts are in Â§1.
 
 ## 6. Data and exact tool images
 
@@ -235,7 +232,7 @@ The recorded Warm-Transfer cluster had a 16-vCPU/64-GiB main node and three
 16-vCPU/64-GiB workers, with 50 GiB admitted per worker to Slurm. Controller:
 8 CPUs/8 GiB; learner: 4 CPUs/16 GiB; monitor: 1 CPU/256 MiB. The recorded Direct-Transfer
 main node was downsized to 8 vCPU/32 GiB, with controller 2 CPUs/4 GiB and the
-same learner and workers. Maintain headroom for OS/NFS and **16 × 384 MiB**
+same learner and workers. Maintain headroom for OS/NFS and **16 Ã— 384 MiB**
 separately isolated auditors per worker. Auditors are not inside task grants.
 
 The portable default example matches Warm-Transfer reservations and needs at least
@@ -247,7 +244,7 @@ For a full clean repeat on an 8-vCPU/32-GiB main node, explicitly set
 This is a new hardware realization, not the original Warm-Transfer controller allocation.
 
 Allow at least 58 GiB free shared scratch before each stage. With verified
-archiving between stages, only the current ~50–60 GiB task payload stays on
+archiving between stages, only the current ~50â€“60 GiB task payload stays on
 shared scratch, plus histories/models/logs. Existing worker-local archive disks
 need room for assigned stage archives plus an 8-GiB reserve. Without archiving,
 plan roughly 300 GiB or more shared free storage for the four-stage repeat;
@@ -325,7 +322,7 @@ python3 SCRIPTS/RQ5/live/submit.py --root /shared/camp/direct-cold-01
 ```
 
 This restores recorded `warm_transfer_cold`, uses its rebased handoff and 6,000 Bowtie2 rows,
-and schedules only new input → validation → archive → report. It automatically
+and schedules only new input â†’ validation â†’ archive â†’ report. It automatically
 uses the recorded Direct-Transfer controller reservation (2 CPUs/4 GiB).
 
 
@@ -346,8 +343,7 @@ python3 SCRIPTS/RQ5/live/configure.py \
 ```
 
 Run the build in an appropriate Slurm allocation, not an under-sized login shell;
-the original build used a larger allocated node. See the legacy guide's build
-resources and `slurm_build_initial_state.sh`. The build trains the offline
+the original build used a larger allocated node. See `SCRIPTS/RQ5/slurm_build_initial_state.sh` for allocated build resources. The build trains the offline
 quantile/proxy/policy bundle and zero-Bowtie2 history. Configure itself never
 re-trains offline models. Rebuilding and live repeating verify procedures;
 the archived exact bundle is the source of the reported numerical realizations.
@@ -406,3 +402,5 @@ execution. Recorded internal model versions, observation IDs and original
 identifiers embedded in task records or compressed model/history files are
 immutable provenance; they are not rewritten just to change presentation.
 Exploratory run records and checkpoints are outside the Git publication package.
+
+Operational code fixes in this release are documented in `DOCS/REPRODUCTION_CHANGES.md`; retained records and checkpoint bytes are unchanged.

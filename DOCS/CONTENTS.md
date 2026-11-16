@@ -1,19 +1,11 @@
-# Artifact contents
+# Paper-specific artifact scope
 
-| Artifact | Included material | Instructions |
-|---|---|---|
-| mmap signal ablation | Paired read/read+mmap inputs, prediction records, training and analysis code | [W3](../Reviewer_Feedbacks/W3/README.md) |
-| Four-feature analysis | Matched cohort, split assignments, native and fixed-route predictions, fitting and plotting code | [Feature ablation](../Reviewer_Feedbacks/chat_ablation/README.md) |
-| Downstream auditing | Selective/random replay records, audit budgets, sampling seeds, analysis and fitting code | [W2](../Reviewer_Feedbacks/W2/README.md) |
-| Audit-cost accounting | Paired timing measurements, frozen allocations, audit selections, accounting and bootstrap code | [W5](../Reviewer_Feedbacks/W5/README.md) |
-| Matched-budget/coverage analysis | Retained inputs, comparison code, numerical references | [W1](../Reviewer_Feedbacks/W1/README.md) |
-| Bowtie2 cold/warm deployment | Workflow, input manifest, online allocation code, task/attempt records, plotting code | [RQ5](../SCRIPTS/RQ5/README.md) |
-| Ponder adapter | Pinned original predictor source, standalone event interface, correctness checks, license and attribution | [Ponder](../SCRIPTS/BASELINES/ponder/README.md) |
-| Manuscript | TeX sections, bibliography, IEEE style files, tables, figures, compiled PDF | [Build notes](../Big_Data_paper/Big_Data_Camera_Ready/source/Camera_Ready/BUILD_NOTES.md) |
-| Reproduction helpers | Snapshot verification, analysis requirements, isolated paper build | [Root README](../README.md) |
+The root README is the reproduction entry point and experiment-to-file map.
 
-The retained WORKS data and implementation use their original directory names
-to preserve reproduction paths. [SOURCE_MANIFEST.json](SOURCE_MANIFEST.json)
-records the imported source revision and file hashes.
-[VERIFICATION.md](VERIFICATION.md) records executed checks. The root
-`ARTIFACT_MANIFEST.json` lists the files and hashes in the distributed snapshot.
+The release retains W2 (downstream selective-auditing replay), W3 (mapped-access ablation), W5 (paired audit-cost accounting), the four-feature ablation, and the four-stage Bowtie2 live experiment. Their fixed cohorts, expected predictions, causal histories, model code and checks are included. Auxiliary route checks within the feature package establish the distinction between native configurations and feature-only comparisons.
+
+The six-workflow offline cohort is needed to rebuild the no-Bowtie2 initial model. It remains even though the six original workflows are not rerun in this paper. Only Bowtie2 and common workflow helpers are executable workflow entries here.
+
+Removed from this release: WORKS-only RQ1-RQ4 evaluation suites and plots; W1 matched-budget comparison; Ponder adapter; unrelated workflow launchers; older cold/warm records and plots; obsolete manuscript versions. Earlier Git commits preserve their history. Retained historical provenance documents describe the original import and do not define current contents.
+
+The current paper source is `Big_Data_paper/Big_Data_Camera_Ready/source/Camera_Ready_Introduction_Revision`. Its Section II and scientific wording are preserved; Table I/II bodies now load the same values from generated, verified row files.

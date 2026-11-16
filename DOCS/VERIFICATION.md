@@ -1,32 +1,34 @@
-# Verification during Big Data packaging
+# Verification of the paper-specific release
 
-Date: 2026-11-10. This record concerns the separate Big Data artifact checkout.
-Earlier logs copied from WORKS/reviewer packages describe their own runs.
+Verified on 2026-11-16. These checks distinguish retained-result reproduction from a new scientific execution.
 
-## Executed here
+## Passed
 
-- Regenerated the manuscript result assets from the copied repository alone.
-  Assertions passed for eight feature/configuration rows, two published
-  endpoints, two mmap arms, 25 paired downstream summaries, 40 audit-budget
-  selections, and both retained Bowtie2 executions.
-- Compiled the paper with the included `build_paper.py` helper using Tectonic
-  0.17 and its BibTeX pass. Output has six pages. No undefined references,
-  missing citations, missing characters, or overfull boxes were found. Existing
-  underfull-line notices and an algorithm-package comment-encoding warning remain.
-- Ran the standalone Ponder test command in this repository: all 123 checks
-  passed, including 48 exact original-core comparisons on synthetic histories.
-- Verified copied upstream Ponder source and dependency hashes during that build.
-- Checked the package for GitHub's per-file size limit and recognizable credential
-  patterns in text files before upload. No matching credentials were found.
-- Verified the delivered snapshot using `verify_artifact.py --check-gzip` before
-  upload; the file manifest records the exact files in this initial artifact.
+- Recomputed all four live stages from full task/attempt records: 6,000 unique successful tasks each. All 1,974 new-input flagstat summaries agree between transfer arms.
+- Deep-verified all 1,264 compressed model/container blobs, including decoded original bytes.
+- Ran the self-contained W2, W3, four-feature and W5 analysis commands under Linux. W2's six causal/protocol tests passed; W3 reproduces 32/30 counts; feature configurations reproduce 85/46/52/30; all eight audit-cost budgets match the retained means.
+- Four new regression tests pass: empty/nonempty fallback labels in all four retained modeling copies; fault injection after outcome commit and before history publication, followed by restart and a contiguous second update; conflicting history file rejection; safe default thresholds and invalid override rejection.
+- Two live I/O/routing tests pass, including corrupt partial-download rejection and the explicit execution allowance. Fourteen CAMP policy/history/calibration tests pass.
+- Linux integration selfcheck passes: restore the offline seed and shared-cold checkpoint to new paths, validate model/history/calibration/SQLite consistency, verify configured source hashes, simulate Slurm submission dependencies and duplicate-submit refusal, and verify the saved-cold branch skips cold/warm.
+- Current figures/tables regenerate; the manuscript compiles to six pages with Tectonic 0.17, resolved references, and no overfull boxes. All six rendered pages were visually inspected. Known engine messages are underfull boxes and an invalid byte in an upstream algorithm.sty comment.
 
-Local analysis used Python 3.13, NumPy 2.2.2, pandas 2.2.3, and Matplotlib 3.10.0;
-Ponder used JDK 11. Historical model-training packages retain their own Python
-3.9 requirements. The manuscript asset checks validate scientific numerical
-summaries, not byte-identical PDF metadata across different toolchains.
+Model/integration checks used Linux via WSL, CPython 3.9.25, numpy 1.26.4, pandas 2.3.3, LightGBM 4.6.0, scikit-learn 1.6.1 and scipy 1.13.1. Plot/build checks also ran in the local Windows analysis environment. Logs and machine-readable integration evidence are in `validation/`.
 
-The manuscript checks recompute metrics from retained measurements. The Ponder
-checks exercise the isolated predictor on synthetic histories. Historical
-experiment and training verification records are included with their respective
-reproduction packages.
+## Re-run the checks
+
+```bash
+python SCRIPTS/RQ5/live/verify_package.py --require-tracked
+python SCRIPTS/RQ5/live/models.py verify --deep
+python SCRIPTS/BIGDATA/reproduce_paper.py --engine tectonic
+# Linux, with the pinned model environment:
+python -m unittest discover -s SCRIPTS/BIGDATA/tests -v
+python -m unittest discover -s SCRIPTS/RQ5/live/tests -v
+python -m unittest discover -s SCRIPTS/RQ5/experiment_template/camp/live_online_learning/tests -v
+python SCRIPTS/RQ5/live/selfcheck.py
+```
+
+## Limits
+
+No fresh full offline fit, new FASTQ download, privileged BCC/eBPF trace, or complete biological Slurm workflow was executed during this release check. The cluster selfcheck simulates scheduler commands. It validates packaging and continuation prerequisites, not a replacement biological experiment. Full-run instructions and inputs/checkpoints are included, but fresh executions may produce different measurements and learning trajectories.
+
+The root manifest is generated after intentional changes and verifies release bytes. Component input/model/result provenance is preserved separately; it must not be replaced to mask unexpected differences during independent reproduction.

@@ -1,0 +1,98 @@
+\section{Data Consumption, Quantiles, and Auditing}
+\label{sec:design}
+Before execution, the allocator uses task attributes and histories from
+$\mathcal{P}(t)$ to issue $\hat y_t$ (Section~\ref{sec:problem}). Auditing
+collects consumption during execution; after completion, recorded
+measurements enter the histories used for subsequent requests.
+
+\subsection{Workflow integration, measurement, and history}
+\label{sec:history}
+A workflow engine such as Nextflow can call an allocator before submission.
+A tracer follows the task launcher and its child processes; completion
+callbacks link memory and consumption measurements to the task identifier.
+This integration leaves analysis programs unchanged.
+
+On Linux, eBPF handlers filter events by the tracked process tree.
+Explicit-read accounting associates file descriptors with observed file opens
+and sums bytes returned by \texttt{read} and \texttt{pread64}.
+A successful \texttt{mmap} call creates a virtual mapping, not a measurement
+of bytes accessed. File-backed page faults, observed for example at
+\texttt{filemap\_fault}, provide a page-based access estimate. Combined with
+explicit-read bytes, this signal describes access activity, not unique
+bytes or peak memory.
+
+A compatibility scope is a group of earlier executions relevant to a
+pending task. Scopes may match task instances, inputs, static features,
+processes, workflows, or execution systems, preserving software and
+resource context. For example, a repeated alignment task can use matching
+input history; a new input may require broader process history. Minimum
+observation counts govern fallback. Peak-memory summaries use completed
+tasks; consumption summaries use their audited subset.
+
+\subsection{Consumption features and prelaunch prediction}
+\label{sec:consumption}
+For task $t$, let $\mathbf{s}_t$ contain static attributes,
+$\mathbf{h}_{m,t}$ summarize earlier peak memory, and $\mathbf{h}_{c,t}$
+summarize earlier audited consumption, as defined in Section~\ref{sec:problem}.
+An auxiliary estimator $g$ predicts consumption
+$\hat c_t=g(\mathbf{s}_t,\mathbf{h}_{m,t})$, yielding memory-model input
+\begin{equation}
+\mathbf{z}_t = [\mathbf{s}_t,\mathbf{h}_{m,t},\mathbf{h}_{c,t},\hat c_t].
+\label{eq:general_features}
+\end{equation}
+The estimator learns from completed audited tasks. The pending task's
+measured consumption is never a prelaunch input. For offline training,
+grouped out-of-fold estimates predict each group of related tasks using
+an estimator trained on other groups, avoiding use of that group's
+consumption targets to construct its predictions.
+
+\label{sec:quantiles}
+A quantile model estimates $\widehat Q_\alpha(\mathbf{z}_t)$, the memory
+percentile at level $\alpha$. The median describes central demand; an
+upper percentile targets a smaller exceedance probability. For example,
+$\alpha=0.95$ targets a threshold exceeded by approximately 5\% of comparable
+tasks, not guaranteed 95\% coverage on new inputs. Models may specialize
+by process, with broader fallbacks. Holding the prediction configuration
+fixed when adding either consumption feature or both isolates their contributions.
+
+\subsection{Calibration and budgeted selective feedback}
+\label{sec:calibration}
+Calibration adjusts a candidate quantile using completed-task prediction errors.
+For example, fitting a positive multiplier $k_t$ from earlier
+observed-to-predicted memory ratios gives a request
+\begin{equation}
+\hat y_t=\left\lceil k_t\widehat Q_\alpha(\mathbf{z}_t)\right\rceil_{\mathrm{MiB}}.
+\label{eq:general_request}
+\end{equation}
+Here $\hat y_t$ is the initial request, rounded to whole mebibytes.
+Prediction and calibration together implement $f$ in Section~\ref{sec:problem}.
+Development data determine the quantile and correction policy; only
+outcomes available before submission inform $k_t$. Compatible prediction-error
+histories and broader fallbacks support calibration, whose achieved
+coverage can change when inputs shift.
+
+\label{sec:gates}
+A gating process applies selection rules to prelaunch predictions and
+the available historical observations. It selects tasks whose consumption features are expected
+to improve memory predictions for similar subsequent tasks. Over $N$ tasks,
+binary audit decisions $q_t\in\{0,1\}$ must satisfy
+$\sum_{t=1}^{N}q_t\leq\lfloor BN\rfloor$, where $B$ is the allowed audit
+fraction and $q_t=1$ selects a task.
+The budget limits measurement volume; gates determine which tasks receive
+it. Completed peak-memory observations update history, but consumption
+enters only when audited. Feedback benefits later requests, not the
+request already issued. Equal-budget comparisons and measurement costs
+are therefore needed to assess selection quality.
+
+\subsection{CAMP implementation and relationship to WORKS}
+\label{sec:camp-implementation}
+Our WORKS paper implemented these mechanisms in CAMP~\cite{camp2026works}:
+task-attributed eBPF measurements, compatibility scopes, a consumption
+estimator, and budgeted selection. LightGBM ensembles estimate the 50th,
+90th, 95th, 99th, and 99.5th memory percentiles. The process-tail configuration
+uses a global median model, workflow--process upper-tail models, and
+global fallbacks. Residual calibration blends compatible and broader
+histories, permitting only upward corrections. These mechanisms and the
+published component results are prior work. Here we expand retained
+component and auditing-cost analyses~\cite{campArtifact} and add distinct
+live transfer experiments on unseen inputs.

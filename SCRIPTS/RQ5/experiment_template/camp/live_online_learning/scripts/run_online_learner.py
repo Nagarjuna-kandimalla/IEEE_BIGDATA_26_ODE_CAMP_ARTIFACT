@@ -78,6 +78,8 @@ def write_json_atomic(path: Path, payload: dict[str, Any]) -> None:
 
 class OnlineLearner:
     def __init__(self, args: argparse.Namespace) -> None:
+        if args.first_update <= args.calibration_window:
+            raise ValueError("first-update must exceed calibration-window")
         self.args = args
         common.CONFIG_PATH = args.experiment_config.resolve()
         self.outcome_dir = args.outcome_dir.resolve()
@@ -132,6 +134,10 @@ class OnlineLearner:
         self.training_thread: threading.Thread | None = None
         self.training_error: BaseException | None = None
         self.next_update_count = self._next_update_count()
+        # online_rows is the durable publication log. Recover committed rows even
+        # when interruption occurred before the corresponding JSON was published.
+        self._published_history_sequence = 0
+        self._publish_history_updates()
 
     def close(self) -> None:
         thread = self.training_thread
@@ -243,7 +249,27 @@ class OnlineLearner:
         )
         return row
 
+    def _publish_history_updates(self) -> None:
+        with self.lock:
+            rows = self.state.execute(
+                "SELECT sequence, row_json FROM online_rows WHERE sequence > ? ORDER BY sequence",
+                (self._published_history_sequence,),
+            ).fetchall()
+            for row in rows:
+                sequence = int(row["sequence"])
+                if sequence != self._published_history_sequence + 1:
+                    raise RuntimeError("non-contiguous committed history sequence")
+                payload = {"sequence": sequence, "row": json.loads(row["row_json"])}
+                path = self.history_update_dir / f"{sequence:08d}.json"
+                if path.exists():
+                    if json.loads(path.read_text(encoding="utf-8")) != payload:
+                        raise RuntimeError(f"immutable history update changed: {path}")
+                else:
+                    write_json_atomic(path, payload)
+                self._published_history_sequence = sequence
+
     def ingest_available(self) -> int:
+        self._publish_history_updates()
         ingested = 0
         for path in sorted(self.outcome_dir.glob("*.outcome.json")):
             relative = path.name
@@ -280,7 +306,7 @@ class OnlineLearner:
                 with self.lock:
                     next_sequence = int(
                         self.state.execute(
-                            "SELECT COUNT(*) + 1 AS n FROM online_rows"
+                            "SELECT COALESCE(MAX(sequence), 0) + 1 AS n FROM online_rows"
                         ).fetchone()["n"]
                     )
                 decision = self._decision_for_outcome(path)
@@ -337,14 +363,7 @@ class OnlineLearner:
                             ),
                         )
             if eligible:
-                write_json_atomic(
-                    self.history_update_dir
-                    / f"{next_sequence:08d}.json",
-                    {
-                        "sequence": next_sequence,
-                        "row": training_row,
-                    },
-                )
+                self._publish_history_updates()
             append_jsonl(
                 self.update_log,
                 {
@@ -886,8 +905,8 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--update-log", type=Path, required=True)
     parser.add_argument("--stop-file", type=Path, required=True)
     parser.add_argument("--ready-file", type=Path, required=True)
-    parser.add_argument("--first-update", type=int, default=32)
-    parser.add_argument("--update-every", type=int, default=64)
+    parser.add_argument("--first-update", type=int, default=128)
+    parser.add_argument("--update-every", type=int, default=128)
     parser.add_argument("--process-min-support", type=int, default=16)
     parser.add_argument("--calibration-window", type=int, default=64)
     parser.add_argument("--poll-seconds", type=float, default=0.25)
@@ -901,6 +920,8 @@ def parse_args() -> argparse.Namespace:
         args.n_jobs,
     ) < 1:
         parser.error("counts and n-jobs must be positive")
+    if args.first_update <= args.calibration_window:
+        parser.error("first-update must exceed calibration-window")
     return args
 
 

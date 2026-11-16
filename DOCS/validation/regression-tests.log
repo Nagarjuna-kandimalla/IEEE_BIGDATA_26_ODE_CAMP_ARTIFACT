@@ -1,0 +1,24 @@
+test_commit_then_interruption_recovers_and_next_update_is_contiguous (test_reproduction_regressions.ReproductionRegressions) ... ok
+test_conflicting_published_history_is_rejected (test_reproduction_regressions.ReproductionRegressions) ... ok
+test_default_update_threshold_and_invalid_override (test_reproduction_regressions.ReproductionRegressions) ... usage: learner [-h] --workflow WORKFLOW --version-prefix VERSION_PREFIX
+               --history-db HISTORY_DB --state-db STATE_DB
+               --history-update-dir HISTORY_UPDATE_DIR --outcome-dir
+               OUTCOME_DIR --decision-dir DECISION_DIR --base-training-frame
+               BASE_TRAINING_FRAME --base-history-features
+               BASE_HISTORY_FEATURES --initial-model-root INITIAL_MODEL_ROOT
+               --canonical-model-root CANONICAL_MODEL_ROOT --experiment-config
+               EXPERIMENT_CONFIG --current-pointer CURRENT_POINTER
+               --version-dir VERSION_DIR --update-log UPDATE_LOG --stop-file
+               STOP_FILE --ready-file READY_FILE [--first-update FIRST_UPDATE]
+               [--update-every UPDATE_EVERY]
+               [--process-min-support PROCESS_MIN_SUPPORT]
+               [--calibration-window CALIBRATION_WINDOW]
+               [--poll-seconds POLL_SECONDS] [--n-jobs N_JOBS]
+learner: error: first-update must exceed calibration-window
+ok
+test_fallback_metadata_empty_and_nonempty_in_all_copies (test_reproduction_regressions.ReproductionRegressions) ... ok
+
+----------------------------------------------------------------------
+Ran 4 tests in 2.653s
+
+OK

@@ -158,7 +158,7 @@ class CampPolicyTests(unittest.TestCase):
 
     def test_live_residual_calibration_is_the_rq2_implementation(self) -> None:
         rq2 = (
-            ROOT.parents[3] / "RQ2" / "calibration.py"
+            ROOT.parent / "original_offline_replay" / "scripts" / "calibration.py"
         ).read_bytes()
         live_support = (
             ROOT.parent / "scripts" / "calibration.py"

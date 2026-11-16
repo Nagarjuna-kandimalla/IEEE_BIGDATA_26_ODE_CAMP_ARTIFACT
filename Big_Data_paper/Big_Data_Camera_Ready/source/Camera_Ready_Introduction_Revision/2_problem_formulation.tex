@@ -1,0 +1,71 @@
+\section{Problem Formulation}
+\label{sec:problem}
+We retain the prelaunch allocation problem introduced in
+WORKS~\cite{camp2026works}. A workflow comprises named processes, each of
+which instantiates tasks for different samples or input partitions.
+Before task $t$ starts, the allocator issues an initial memory request
+$\hat y_t$. Its static feature vector $\mathbf{s}_t$ contains workflow and
+process metadata, software and system context, resource settings, and
+staged input size. Execution subsequently reveals peak resident set size
+(RSS), $y_t$, and duration $d_t$. If the task is audited, it also supplies a
+consumption measurement $c_t$. Neither $y_t$ nor $c_t$ is available for that
+task's initial allocation.
+
+Let $\mathcal{P}(t)$ contain tasks whose outcomes have been recorded before
+the allocation decision for $t$. Peak-memory history $\mathbf{h}_{m,t}$
+summarizes compatible observations from this set; consumption history
+$\mathbf{h}_{c,t}$ uses its audited subset. The prelaunch decisions are
+\begin{equation}
+\hat y_t=f(\mathbf{s}_t,\mathbf{h}_{m,t},\mathbf{h}_{c,t}),
+\qquad q_t\in\{0,1\},
+\label{eq:allocation_problem}
+\end{equation}
+where $f$ is the memory-allocation function and $q_t=1$ selects auditing.
+A budget $B\in(0,1]$ limits the audited
+fraction over the specified evaluation horizon. Auditing task $t$ cannot
+improve the request already issued to it; its measurements can inform
+only later decisions. During live execution, these results become
+available only after the task finishes and they are added to CAMP's
+history.
+
+The allocation objective is to limit underallocation while avoiding
+unnecessary reservations. For $N$ evaluated tasks, coverage is the
+fraction whose initial request meets or exceeds measured peak memory:
+\begin{equation}
+\mathrm{Cov}=\frac{1}{N}\sum_{t=1}^{N}\mathbf{1}[\hat y_t\geq y_t],
+\label{eq:coverage}
+\end{equation}
+where $\mathbf{1}[\cdot]$ is the indicator function. As in WORKS, retry
+increases do not enter $\hat y_t$. Live studies therefore
+report task completion, failures, and retries separately.
+
+We evaluate coverage alongside total requested memory, $\sum_t\hat y_t$
+(GiB), and unused memory-time, $W$ (GiB-hours), defined as follows:
+\begin{equation}
+W=\sum_{t\in\mathcal{D}}\max(\hat y_t-y_t,0)\,d_t,
+\label{eq:unused_memory_time}
+\end{equation}
+where $\mathcal{D}$ contains tasks with valid runtime measurements, memory
+is expressed in GiB, and runtime in hours. For each task, $W$ multiplies
+memory reserved above its measured peak by its runtime, then sums these
+values across tasks. It uses peak memory rather than tracking memory
+usage throughout execution. Total requested memory sums requests across
+tasks that may run at different times; it does not measure memory reserved
+simultaneously. The live experiments report $W$; a separate audit-cost
+analysis estimates the extra reserved memory-time caused by auditing,
+also in GiB-hours. Section~\ref{sec:experiments} defines this auditing cost
+and specifies the runtime and cost components included in each analysis.
+
+To evaluate whether the additional warm run improves allocation on unseen
+inputs, we compare two paths from the same cold-run checkpoint:
+\[
+\begin{aligned}
+\text{Warm-Transfer (WT):}\quad &\text{Cold} \rightarrow \text{Warm} \rightarrow \text{New inputs},\\
+\text{Direct-Transfer (DT):}\quad &\text{Cold} \rightarrow \text{New inputs}.
+\end{aligned}
+\]
+Warm repeats the original inputs; both paths then process the same unseen
+inputs. Cold is shared, not rerun for each path. Both branches update their
+models, history, and calibration online, excluding a task's own outcomes
+from its prelaunch request. We assess the additional warm run using
+coverage, total requested memory, and unused memory-time.

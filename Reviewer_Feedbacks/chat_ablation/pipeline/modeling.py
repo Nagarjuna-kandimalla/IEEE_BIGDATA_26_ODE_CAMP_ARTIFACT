@@ -487,13 +487,12 @@ def fit_final_per_process_predictions(
             values[missing] = fallback[missing]
     if any(not np.isfinite(values).all() for values in predictions.values()):
         raise ValueError("global tail fallback contains non-finite values")
-    fallback_processes = (
-        test.loc[fallback_rows, ["workflow", "process"]]
+    fallback_processes = sorted(
+        "::".join(row)
+        for row in test.loc[fallback_rows, ["workflow", "process"]]
         .drop_duplicates()
         .astype(str)
-        .agg("::".join, axis=1)
-        .sort_values()
-        .tolist()
+        .itertuples(index=False, name=None)
     )
     metadata = {
         "scope": "per_process",
