@@ -1,0 +1,14 @@
+{
+  "status": "PASS",
+  "outputs": [
+    "components/results.json",
+    "components/feature_metrics.csv",
+    "components/mapped_access_metrics.csv",
+    "components/downstream_means.csv",
+    "components/downstream_intervals.csv",
+    "components/audit_cost_summary.csv",
+    "live/results.json",
+    "live/metrics.tsv",
+    "live/stage_details.json"
+  ]
+}

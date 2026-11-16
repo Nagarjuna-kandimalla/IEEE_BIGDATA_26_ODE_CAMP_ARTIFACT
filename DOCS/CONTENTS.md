@@ -1,11 +1,9 @@
-# Paper-specific artifact scope
+# Technical artifact contents
 
-The root README is the reproduction entry point and experiment-to-file map.
+The root README lists directories and reproduction commands.
 
-The release retains W2 (downstream selective-auditing replay), W3 (mapped-access ablation), W5 (paired audit-cost accounting), the four-feature ablation, and the four-stage Bowtie2 live experiment. Their fixed cohorts, expected predictions, causal histories, model code and checks are included. Auxiliary route checks within the feature package establish the distinction between native configurations and feature-only comparisons.
+Component packages contain mapped-access ablation (W3), four feature configurations (chat_ablation), downstream selective/random auditing (W2), and auditing-cost analysis (W5). Each includes its inputs and analysis code; training packages include fixed splits, modeling code and reference predictions.
 
-The six-workflow offline cohort is needed to rebuild the no-Bowtie2 initial model. It remains even though the six original workflows are not rerun in this paper. Only Bowtie2 and common workflow helpers are executable workflow entries here.
+The live package contains the offline seed, matching model/history/database checkpoints, exact tool images, original/new input manifests, execution code, and four stages of Bowtie2 results. The six-workflow cohort and fixed split support offline-seed rebuilding.
 
-Removed from this release: WORKS-only RQ1-RQ4 evaluation suites and plots; W1 matched-budget comparison; Ponder adapter; unrelated workflow launchers; older cold/warm records and plots; obsolete manuscript versions. Earlier Git commits preserve their history. Retained historical provenance documents describe the original import and do not define current contents.
-
-The current paper source is `Big_Data_paper/Big_Data_Camera_Ready/source/Camera_Ready_Introduction_Revision`. Its Section II and scientific wording are preserved; Table I/II bodies now load the same values from generated, verified row files.
+`SCRIPTS/BIGDATA/reproduce_results.py` verifies and exports the retained numerical results to CSV/JSON. `SCRIPTS/RQ5/LIVE_EXPERIMENTS.md` contains fresh live-execution instructions.

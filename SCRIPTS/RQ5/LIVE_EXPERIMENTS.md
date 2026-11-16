@@ -9,8 +9,8 @@ No command below pushes to Git, provisions cloud machines, or deletes existing r
 
 | Experiment | Sequence | Starting state | Paper role |
 |---|---|---|---|
-| Warm-Transfer | fresh original cold â†’ original warm â†’ new input | Offline seed with no Bowtie2 history | Main live result |
-| Direct-Transfer | **reuse the exact Warm-Transfer terminal cold checkpoint â†’ new input** | Warm-Transfer cold model, history and calibration | Extra-warm-pass ablation |
+| Warm-Transfer | fresh original cold -> original warm -> new input | Offline seed with no Bowtie2 history | Main live result |
+| Direct-Transfer | **reuse the exact Warm-Transfer terminal cold checkpoint -> new input** | Warm-Transfer cold model, history and calibration | Extra-warm-pass ablation |
 
 Direct-Transfer did **not** rerun cold. It did not inherit Warm-Transfer's warm or new-input model.
 The two new-input arms share the Warm-Transfer cold ancestor; Warm-Transfer additionally executes
@@ -63,7 +63,7 @@ base training frame**, not just `current_model.json` or one joblib file.
 | `DATA/RQ5/live/inputs/` | Original/new task manifests, ENA metadata and new-study selection record |
 | `DATA/RQ5/live/models/` | Losslessly compressed, deduplicated initial/terminal model-history bundles **and exact SIF containers**, with per-file hashes |
 | `RESULTS/RQ5/live_experiments/` | All four stage tables, attempts, decisions, outcomes, learning events, traces, flagstat summaries, validation and archive inventories, comparisons and historical provenance |
-| `RESULTS/RQ5/transfer_studies/` | Compact paper-specific copies consumed by the camera-ready asset generator |
+| `RESULTS/RQ5/transfer_studies/` | Compact transfer experiment records |
 
 Historical paths such as `/shared/ubuntu/...` in the archived records describe
 the original execution. They are not dependencies of the portable runner.
@@ -132,11 +132,11 @@ flagstat files. Outputs are `results.json` and `metrics.tsv`; reference output i
 under `RESULTS/RQ5/live_experiments/recomputed/`.
 The deep model check verifies compressed parts **and decoded original bytes**.
 
-To regenerate the manuscript figures and tables, use Python 3.10+ with
+To recompute numerical experiment results, use Python 3.10+ with
 `SCRIPTS/BIGDATA/requirements-analysis.txt`, then run:
 
 ```bash
-python SCRIPTS/BIGDATA/reproduce_paper.py
+python SCRIPTS/BIGDATA/reproduce_results.py
 ```
 
 ## 5. Inspect or continue from a recorded checkpoint
@@ -168,7 +168,7 @@ Validate a restored cold checkpoint with the pinned environment:
 ```
 
 Expected: PASS, 6,000 Bowtie2 history/training/SQLite rows and 64 calibration
-rows matching the cold checkpointâ€™s recorded model version. Other snapshot counts are in Â§1.
+rows matching the cold checkpoint's recorded model version. Other snapshot counts are in Section 1.
 
 ## 6. Data and exact tool images
 
@@ -232,7 +232,7 @@ The recorded Warm-Transfer cluster had a 16-vCPU/64-GiB main node and three
 16-vCPU/64-GiB workers, with 50 GiB admitted per worker to Slurm. Controller:
 8 CPUs/8 GiB; learner: 4 CPUs/16 GiB; monitor: 1 CPU/256 MiB. The recorded Direct-Transfer
 main node was downsized to 8 vCPU/32 GiB, with controller 2 CPUs/4 GiB and the
-same learner and workers. Maintain headroom for OS/NFS and **16 Ã— 384 MiB**
+same learner and workers. Maintain headroom for OS/NFS and **16 x 384 MiB**
 separately isolated auditors per worker. Auditors are not inside task grants.
 
 The portable default example matches Warm-Transfer reservations and needs at least
@@ -244,7 +244,7 @@ For a full clean repeat on an 8-vCPU/32-GiB main node, explicitly set
 This is a new hardware realization, not the original Warm-Transfer controller allocation.
 
 Allow at least 58 GiB free shared scratch before each stage. With verified
-archiving between stages, only the current ~50â€“60 GiB task payload stays on
+archiving between stages, only the current ~50-60 GiB task payload stays on
 shared scratch, plus histories/models/logs. Existing worker-local archive disks
 need room for assigned stage archives plus an 8-GiB reserve. Without archiving,
 plan roughly 300 GiB or more shared free storage for the four-stage repeat;
@@ -322,7 +322,7 @@ python3 SCRIPTS/RQ5/live/submit.py --root /shared/camp/direct-cold-01
 ```
 
 This restores recorded `warm_transfer_cold`, uses its rebased handoff and 6,000 Bowtie2 rows,
-and schedules only new input â†’ validation â†’ archive â†’ report. It automatically
+and schedules only new input -> validation -> archive -> report. It automatically
 uses the recorded Direct-Transfer controller reservation (2 CPUs/4 GiB).
 
 

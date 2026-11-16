@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "date": "2026-11-16",
-  "description": "Paper-specific CAMP artifact: current six-page source/PDF, component and audit analyses, four live stages, portable execution code and model/history/container store.",
+  "description": "CAMP technical artifact: component and audit experiments, numerical result reproduction, four-stage live Bowtie2 execution, datasets and model/history/container bundles.",
   "files": [
     {
       "path": ".gitattributes",
@@ -10,273 +10,13 @@
     },
     {
       "path": ".gitignore",
-      "bytes": 643,
-      "sha256": "e0187714bf9f563f3150267a335941b266402b757df825e88c0ab5df054e188d"
+      "bytes": 753,
+      "sha256": "76a148ca2c529172d6907d21a71cb66e71573d43049b20b8f05bc22d1f3d7b8f"
     },
     {
       "path": "AUDIT/README.md",
       "bytes": 1657,
       "sha256": "68ca75ec95e71d75c2453f9bb14a0dcdd558a54de44025f2d6877b84423aa513"
-    },
-    {
-      "path": "Big_Data_paper/Big_Data_Camera_Ready/source/Camera_Ready_Introduction_Revision/0_abstract.tex",
-      "bytes": 1318,
-      "sha256": "e0057bf64e60bf3e8092f5dab74cae1ef7900d739b4b289541eedf4349666529"
-    },
-    {
-      "path": "Big_Data_paper/Big_Data_Camera_Ready/source/Camera_Ready_Introduction_Revision/1_introduction.tex",
-      "bytes": 4366,
-      "sha256": "b258a179d9881e98a0083ef4f21903a9a6a13972662502b4872254424700449c"
-    },
-    {
-      "path": "Big_Data_paper/Big_Data_Camera_Ready/source/Camera_Ready_Introduction_Revision/2_problem_formulation.tex",
-      "bytes": 3823,
-      "sha256": "0709b5681c7f9153f3825f8634e75348782211b44fa290a818dc723cb8078c8c"
-    },
-    {
-      "path": "Big_Data_paper/Big_Data_Camera_Ready/source/Camera_Ready_Introduction_Revision/3_camp_background_and_relationship.tex",
-      "bytes": 5601,
-      "sha256": "544f9a51005c9f5ddd77d8f76fa96227a2ae24e1b12736a667d0c61577628fa8"
-    },
-    {
-      "path": "Big_Data_paper/Big_Data_Camera_Ready/source/Camera_Ready_Introduction_Revision/4_experimental_method.tex",
-      "bytes": 7943,
-      "sha256": "11f85d2b6ff7e40568e5177c7b9e73b2539d2aec0c81a9e74a56319202bb0f79"
-    },
-    {
-      "path": "Big_Data_paper/Big_Data_Camera_Ready/source/Camera_Ready_Introduction_Revision/5_results.tex",
-      "bytes": 5433,
-      "sha256": "cc3818c076c9c324e13d765cf57f563392598993d6634a7c7bce4070759309ab"
-    },
-    {
-      "path": "Big_Data_paper/Big_Data_Camera_Ready/source/Camera_Ready_Introduction_Revision/6_related_work.tex",
-      "bytes": 1792,
-      "sha256": "91eb680a16d396a68157b95adf22eedfe679a68ca87c9d0f8dd8cc50f41111b2"
-    },
-    {
-      "path": "Big_Data_paper/Big_Data_Camera_Ready/source/Camera_Ready_Introduction_Revision/7_conclusion.tex",
-      "bytes": 801,
-      "sha256": "643edbfc692f032fc6b8fc04f866969b538a8ddaa7bfff6ca2ff4cca4afa3846"
-    },
-    {
-      "path": "Big_Data_paper/Big_Data_Camera_Ready/source/Camera_Ready_Introduction_Revision/IEEEtran.bst",
-      "bytes": 59215,
-      "sha256": "b445bc94cfde36bb836a4c6f5ce7149f1488d76dfe8acd39a8771f084ba8f348"
-    },
-    {
-      "path": "Big_Data_paper/Big_Data_Camera_Ready/source/Camera_Ready_Introduction_Revision/IEEEtran.cls",
-      "bytes": 281961,
-      "sha256": "5832f14d4cffd002b4e42c5e04bd24aa5823314b625260a1db598e536314f4f9"
-    },
-    {
-      "path": "Big_Data_paper/Big_Data_Camera_Ready/source/Camera_Ready_Introduction_Revision/INTRODUCTION_REVISION_PREVIEW.pdf",
-      "bytes": 192195,
-      "sha256": "c8bd9b97d099272383ce9425471043a051ad7543e0c3bc45b0918e3ad32f70ea"
-    },
-    {
-      "path": "Big_Data_paper/Big_Data_Camera_Ready/source/Camera_Ready_Introduction_Revision/INTRODUCTION_REVISION_PREVIEW.tex",
-      "bytes": 48,
-      "sha256": "39d25559580a75197483160fb70e8a13efebf53883b1ec7fb4b5f76a10e7b389"
-    },
-    {
-      "path": "Big_Data_paper/Big_Data_Camera_Ready/source/Camera_Ready_Introduction_Revision/README.md",
-      "bytes": 591,
-      "sha256": "5fbe6e4f477ccf2af63cbeb178c74ee4c4aeb7a98c4e361e9a073f288298b05e"
-    },
-    {
-      "path": "Big_Data_paper/Big_Data_Camera_Ready/source/Camera_Ready_Introduction_Revision/RESULTS_PROVENANCE.md",
-      "bytes": 2617,
-      "sha256": "e6dfde8bce5a3ce591e6db2489d8d591161130f85b713a0c533f5ebe713cdd11"
-    },
-    {
-      "path": "Big_Data_paper/Big_Data_Camera_Ready/source/Camera_Ready_Introduction_Revision/build_online_plot.py",
-      "bytes": 4368,
-      "sha256": "eb95cf59a6c368e8895f994236e3097d953345786df2656e1b7d026475f21722"
-    },
-    {
-      "path": "Big_Data_paper/Big_Data_Camera_Ready/source/Camera_Ready_Introduction_Revision/build_result_assets.py",
-      "bytes": 9398,
-      "sha256": "4909f70759d35d8af577f5e80fcfa754056fd0d85a5ab90b18937c03d3a95763"
-    },
-    {
-      "path": "Big_Data_paper/Big_Data_Camera_Ready/source/Camera_Ready_Introduction_Revision/build_transfer_assets.py",
-      "bytes": 4685,
-      "sha256": "d15335ebaedafe36529fbdecacd9a485ed9d989c313cb9a191184fdc290e7dbe"
-    },
-    {
-      "path": "Big_Data_paper/Big_Data_Camera_Ready/source/Camera_Ready_Introduction_Revision/main.tex",
-      "bytes": 3607,
-      "sha256": "e827448ba8a4ffa9ae3728d665c920df250a47e3213fe47d01eeb312f84ca0ad"
-    },
-    {
-      "path": "Big_Data_paper/Big_Data_Camera_Ready/source/Camera_Ready_Introduction_Revision/references.bib",
-      "bytes": 29437,
-      "sha256": "63cec0979afa8f85b3c7622539d78c10cfbace9cdd13a1319b463c22729f44b0"
-    },
-    {
-      "path": "Big_Data_paper/Big_Data_Camera_Ready/source/Camera_Ready_Introduction_Revision/result_assets/audit_cost_summary.csv",
-      "bytes": 644,
-      "sha256": "69dbfbdcac2985f88e761cad1ecae78379d723b0054059ad8b2efa22c4a4f9cb"
-    },
-    {
-      "path": "Big_Data_paper/Big_Data_Camera_Ready/source/Camera_Ready_Introduction_Revision/result_assets/audit_tradeoffs.pdf",
-      "bytes": 15213,
-      "sha256": "1e4ba723f2ceeb60caaaa434731821d4c15ed61f90c94c77c62756065979ca3d"
-    },
-    {
-      "path": "Big_Data_paper/Big_Data_Camera_Ready/source/Camera_Ready_Introduction_Revision/result_assets/audit_tradeoffs.png",
-      "bytes": 64252,
-      "sha256": "9e7fcc276f0b4c9d00b7f1c73b627fe35a50b07f1a9b5ce9bf2b07fa3c2b22ad"
-    },
-    {
-      "path": "Big_Data_paper/Big_Data_Camera_Ready/source/Camera_Ready_Introduction_Revision/result_assets/feature_rows.tex",
-      "bytes": 205,
-      "sha256": "4786cb5a330429ea3398783d95a11f98c0b69b1feb615f0eb41e30d80cb5796c"
-    },
-    {
-      "path": "Big_Data_paper/Big_Data_Camera_Ready/source/Camera_Ready_Introduction_Revision/result_assets/feature_table.tex",
-      "bytes": 369,
-      "sha256": "9d1755a1207bcca021f983210bc374d2de3d7980ea06e64f141b7dc6890c52e9"
-    },
-    {
-      "path": "Big_Data_paper/Big_Data_Camera_Ready/source/Camera_Ready_Introduction_Revision/result_assets/figure_data.csv",
-      "bytes": 743,
-      "sha256": "f627e84f3e7dcbedaac7e22af61dab1dd78c681aa35f16370a0a3bdeadeb5a2a"
-    },
-    {
-      "path": "Big_Data_paper/Big_Data_Camera_Ready/source/Camera_Ready_Introduction_Revision/result_assets/figure_data.json",
-      "bytes": 4774,
-      "sha256": "5bd74340cc93aaa4b2ae3f3a5d971a3bfe6b913c8b4fb65d6901cc171db4da37"
-    },
-    {
-      "path": "Big_Data_paper/Big_Data_Camera_Ready/source/Camera_Ready_Introduction_Revision/result_assets/mmap_rows.tex",
-      "bytes": 76,
-      "sha256": "e54f27ac7d3c1775a6399661b85c3508122fc76772107f28711f2f2c42e86a82"
-    },
-    {
-      "path": "Big_Data_paper/Big_Data_Camera_Ready/source/Camera_Ready_Introduction_Revision/result_assets/mmap_table.tex",
-      "bytes": 207,
-      "sha256": "6c784c291ac0afb4e77029b77f31e7ef4c8f251dab95a23056c059d93c7fc618"
-    },
-    {
-      "path": "Big_Data_paper/Big_Data_Camera_Ready/source/Camera_Ready_Introduction_Revision/result_assets/online_deployment_compact.pdf",
-      "bytes": 102449,
-      "sha256": "5b9f9f8658429f1fcb872b026de4dcb1b99213fa83a3cc204e5674d8ca23fe66"
-    },
-    {
-      "path": "Big_Data_paper/Big_Data_Camera_Ready/source/Camera_Ready_Introduction_Revision/result_assets/online_deployment_compact.png",
-      "bytes": 129797,
-      "sha256": "9754a70ad2295be76292c29a09fe5a850b499856cc6d8f473d714929f3322e7c"
-    },
-    {
-      "path": "Big_Data_paper/Big_Data_Camera_Ready/source/Camera_Ready_Introduction_Revision/result_assets/result_provenance.json",
-      "bytes": 16068,
-      "sha256": "0333330608da603865b322509fb0591e6c809900705d60c67394f334bba39ccc"
-    },
-    {
-      "path": "Big_Data_paper/Big_Data_Camera_Ready/source/Camera_Ready_Introduction_Revision/result_assets/transfer_provenance.json",
-      "bytes": 6651,
-      "sha256": "44b4ef24005c0daca0ae926fe6b3aed87ba58d1fbb95a57ac443c2eb391e2628"
-    },
-    {
-      "path": "Big_Data_paper/Big_Data_Camera_Ready/source/Camera_Ready_Introduction_Revision/result_assets/transfer_records/direct_transfer_new_input/handoff.original.json",
-      "bytes": 1733,
-      "sha256": "7c8169e2dd74204370ff54478fe68fdfe03f582585bc5a8449ac862202c25433"
-    },
-    {
-      "path": "Big_Data_paper/Big_Data_Camera_Ready/source/Camera_Ready_Introduction_Revision/result_assets/transfer_records/direct_transfer_new_input/summary.json",
-      "bytes": 9617,
-      "sha256": "7fb1bad708dcd2509210c37139646f3d04483ecf212fc1b12aae292396f054d7"
-    },
-    {
-      "path": "Big_Data_paper/Big_Data_Camera_Ready/source/Camera_Ready_Introduction_Revision/result_assets/transfer_records/direct_transfer_new_input/task_instances.tsv.gz",
-      "bytes": 808685,
-      "sha256": "1562e8c28bba2d6f37894412d62512a11a9168607a734066754327568f2f0986"
-    },
-    {
-      "path": "Big_Data_paper/Big_Data_Camera_Ready/source/Camera_Ready_Introduction_Revision/result_assets/transfer_records/new_6000.tsv",
-      "bytes": 7989,
-      "sha256": "43dc626fb4e1bdd0c7dea263edd2c1a51cb6ea9afdeec57cafc754dd9f79a91a"
-    },
-    {
-      "path": "Big_Data_paper/Big_Data_Camera_Ready/source/Camera_Ready_Introduction_Revision/result_assets/transfer_records/new_dataset_selection.json",
-      "bytes": 1358,
-      "sha256": "f94916df59a3e872b690f47916b221cc4040f5add5cdc12d80d017d2052009d3"
-    },
-    {
-      "path": "Big_Data_paper/Big_Data_Camera_Ready/source/Camera_Ready_Introduction_Revision/result_assets/transfer_records/new_ena_metadata.tsv",
-      "bytes": 18200,
-      "sha256": "7618c5b281ac1f0a89ff3f3c829e72d68fcac1482ac919a11940a8521dd4af2e"
-    },
-    {
-      "path": "Big_Data_paper/Big_Data_Camera_Ready/source/Camera_Ready_Introduction_Revision/result_assets/transfer_records/original_6000.tsv",
-      "bytes": 7951,
-      "sha256": "9e30ca1797c6a49243877f33dabaad0f48894d9ccbef36016cd8bc5e33dd25ee"
-    },
-    {
-      "path": "Big_Data_paper/Big_Data_Camera_Ready/source/Camera_Ready_Introduction_Revision/result_assets/transfer_records/source_manifest.json",
-      "bytes": 4387,
-      "sha256": "3c740b8345cbbe44c66ced610aa7c49e4a1511d4a63e35d18d60e1b1b4a9e776"
-    },
-    {
-      "path": "Big_Data_paper/Big_Data_Camera_Ready/source/Camera_Ready_Introduction_Revision/result_assets/transfer_records/studies.json",
-      "bytes": 1244,
-      "sha256": "40d705faa8634cf5a0924966ef3b5b1d8be07700b0cbbb14c0fe33d7d103371e"
-    },
-    {
-      "path": "Big_Data_paper/Big_Data_Camera_Ready/source/Camera_Ready_Introduction_Revision/result_assets/transfer_records/warm_transfer_cold/handoff.original.json",
-      "bytes": 1692,
-      "sha256": "c741eb5fb58d88753cd9cef6799e9efe1bdfd1be7fa9cb3f88d5d25713d53527"
-    },
-    {
-      "path": "Big_Data_paper/Big_Data_Camera_Ready/source/Camera_Ready_Introduction_Revision/result_assets/transfer_records/warm_transfer_cold/summary.json",
-      "bytes": 9568,
-      "sha256": "b27148f46f4e00e105fa60fcffe271953c8a6c16a93d157ec0f304bc84069fbb"
-    },
-    {
-      "path": "Big_Data_paper/Big_Data_Camera_Ready/source/Camera_Ready_Introduction_Revision/result_assets/transfer_records/warm_transfer_cold/task_instances.tsv.gz",
-      "bytes": 802726,
-      "sha256": "bd9bb67af07fa388aae7791f409fb9ea639d1af34e707ff1a501899ddc2b4639"
-    },
-    {
-      "path": "Big_Data_paper/Big_Data_Camera_Ready/source/Camera_Ready_Introduction_Revision/result_assets/transfer_records/warm_transfer_new_input/handoff.original.json",
-      "bytes": 1720,
-      "sha256": "64deb0c4eb004edf6ed8da9284b35891f05005b7d0046b3c7452c26fcde5e7e1"
-    },
-    {
-      "path": "Big_Data_paper/Big_Data_Camera_Ready/source/Camera_Ready_Introduction_Revision/result_assets/transfer_records/warm_transfer_new_input/summary.json",
-      "bytes": 9576,
-      "sha256": "a93001bddef5193d6006ede387e1ddf59ae7f5d1b1e4f79ca89bc8fb9cc073cd"
-    },
-    {
-      "path": "Big_Data_paper/Big_Data_Camera_Ready/source/Camera_Ready_Introduction_Revision/result_assets/transfer_records/warm_transfer_new_input/task_instances.tsv.gz",
-      "bytes": 808750,
-      "sha256": "d8b61d20a01d24338b58676a800074905819e8dd8e56925b09388de576af70c5"
-    },
-    {
-      "path": "Big_Data_paper/Big_Data_Camera_Ready/source/Camera_Ready_Introduction_Revision/result_assets/transfer_records/warm_transfer_warm/handoff.original.json",
-      "bytes": 1712,
-      "sha256": "4a6018406acefd3937b19f9924a28aa07e9419d4f6a1e5994969f6181ef77560"
-    },
-    {
-      "path": "Big_Data_paper/Big_Data_Camera_Ready/source/Camera_Ready_Introduction_Revision/result_assets/transfer_records/warm_transfer_warm/summary.json",
-      "bytes": 9599,
-      "sha256": "c37e945c0cad83b59415202fe4582e71f87b2e9a1ac7c54cbcda10dce90e88a3"
-    },
-    {
-      "path": "Big_Data_paper/Big_Data_Camera_Ready/source/Camera_Ready_Introduction_Revision/result_assets/transfer_records/warm_transfer_warm/task_instances.tsv.gz",
-      "bytes": 819775,
-      "sha256": "b659f58a29e956ed7058292374468985c4b573d6f0639f818b568c7f3bf71bc7"
-    },
-    {
-      "path": "Big_Data_paper/Big_Data_Camera_Ready/source/IEEEtran.bst",
-      "bytes": 59215,
-      "sha256": "b445bc94cfde36bb836a4c6f5ce7149f1488d76dfe8acd39a8771f084ba8f348"
-    },
-    {
-      "path": "Big_Data_paper/Big_Data_Camera_Ready/source/IEEEtran.cls",
-      "bytes": 281961,
-      "sha256": "5832f14d4cffd002b4e42c5e04bd24aa5823314b625260a1db598e536314f4f9"
     },
     {
       "path": "DATA/README.md",
@@ -6705,23 +6445,23 @@
     },
     {
       "path": "DOCS/CONTENTS.md",
-      "bytes": 1393,
-      "sha256": "0efb77f212c569d6bb47b1b6369b017429df56f1b046d7218f8a0264cb46a591"
+      "bytes": 842,
+      "sha256": "5da7e58d85e412cda4d6855de2e94975c761ae4819f4e7d7b9e3fe88cc3a8b72"
     },
     {
       "path": "DOCS/REPRODUCTION_CHANGES.md",
-      "bytes": 1644,
-      "sha256": "9464290ae128fb637a39d3fc0bbfc0aa3b1ca874176793f28541e1239bea79f9"
+      "bytes": 1421,
+      "sha256": "8845bb76e24d284072905f06531b7c82645fac738c7073649b582b52a378db38"
     },
     {
       "path": "DOCS/SOURCE_MANIFEST.json",
-      "bytes": 412894,
-      "sha256": "65ff13c70ce9a83a0961b131c28b64693b071cd9b0b4be722d37f2442ae6753a"
+      "bytes": 307952,
+      "sha256": "fa8d4b35088ae729e6b8a0f782ae15334d2b664636deb1e44b82f488c9c4fd2c"
     },
     {
       "path": "DOCS/VERIFICATION.md",
-      "bytes": 3239,
-      "sha256": "99199f98b9f0985007386e6ebbe124be1c1762d3378c32b9d504c04d4ffeb13a"
+      "bytes": 2918,
+      "sha256": "76179a45dccb5b67e0e70a165e398c121745036f3d9f370b1aade30a0f7f642b"
     },
     {
       "path": "DOCS/validation/component-W2.log",
@@ -6769,9 +6509,9 @@
       "sha256": "4975b2beddec243e799ec9f5cc4432024d297b3345a32f3cbf94745ddccd40d4"
     },
     {
-      "path": "DOCS/validation/paper-reproduction.json",
-      "bytes": 3532,
-      "sha256": "13196986ad81218165e3884192b9beba0f89fc0eda7aa2772631fd71d8645a9b"
+      "path": "DOCS/validation/numerical-reproduction.json",
+      "bytes": 358,
+      "sha256": "513ec20c63a5c8a031d08728f7c7a78dc855b581bd0c2bc1006a10f672ecf7fa"
     },
     {
       "path": "DOCS/validation/regression-tests.log",
@@ -6780,8 +6520,8 @@
     },
     {
       "path": "README.md",
-      "bytes": 8816,
-      "sha256": "bb94b669c34314890cdabbf027b250659658880dd158dbe82f028334ac2aa086"
+      "bytes": 6992,
+      "sha256": "2595185675591b72099d6b7ae85ac113420aa2627586906fd6e357421512a4b9"
     },
     {
       "path": "RESULTS/README.md",
@@ -46605,13 +46345,13 @@
     },
     {
       "path": "RESULTS/RQ5/transfer_studies/README.md",
-      "bytes": 947,
-      "sha256": "aa2ec8d5634da4930ce7bdb607cf93b49cedfaafa73e6942681033ea441ea3ec"
+      "bytes": 756,
+      "sha256": "b370ed400e833ebe76714095744a5bdf9127340b4e480320fb367f661b2bad5a"
     },
     {
       "path": "RESULTS/RQ5/transfer_studies/SHA256SUMS",
       "bytes": 1841,
-      "sha256": "0d32d7586bdba10661b96b099b0d6871375e860c4b6c576aa7f8626f6a89d8ab"
+      "sha256": "231e69ac0af1e731c42ea4746e5991fc4a9f8c5bcfb5ae79ed14abd9032ce660"
     },
     {
       "path": "RESULTS/RQ5/transfer_studies/direct_transfer_new_input/handoff.json",
@@ -46710,8 +46450,8 @@
     },
     {
       "path": "Reviewer_Feedbacks/README.md",
-      "bytes": 307,
-      "sha256": "54a748e2cf8830d9b9dd43ffbd1e0f8f44be4be361e3c49620037fea0b059ce8"
+      "bytes": 312,
+      "sha256": "796a7aa72ef1243af15cf33c3f22535e6844e7faf4f548f7e6a676ffec3a3f7e"
     },
     {
       "path": "Reviewer_Feedbacks/W2/EXPERIMENT_PLAN.md",
@@ -50566,12 +50306,12 @@
     {
       "path": "Reviewer_Feedbacks/W5/MANIFEST.sha256",
       "bytes": 1206,
-      "sha256": "477b663f07e563112976e459204cf0ec4c1e0d9b2df2b58bf2764614b701beba"
+      "sha256": "424067630c452ac1334f5d8c0ba980cff191562cbb49f68277d8c79313561b45"
     },
     {
       "path": "Reviewer_Feedbacks/W5/README.md",
-      "bytes": 1252,
-      "sha256": "f3f58e7dd93c3a01567b9e8e0862e5e3e57ffa48eae8ed12cec0a22e16b503eb"
+      "bytes": 1266,
+      "sha256": "95a795bd7ec41c5d8ead46a9e0c0482551ca7b24a0213ac10bdda02d098cda04"
     },
     {
       "path": "Reviewer_Feedbacks/W5/RESULTS.md",
@@ -51099,14 +50839,14 @@
       "sha256": "a6e09fd0801b4cfce57db78ffc8a6127f2eea42530817a2dddc4ee3fd65f22cb"
     },
     {
-      "path": "SCRIPTS/BIGDATA/build_paper.py",
-      "bytes": 1938,
-      "sha256": "a335e7a53af4b90de37fc1269fe78fee3ed3b6e4c4fa03a722cc0250c0e7372e"
+      "path": "SCRIPTS/BIGDATA/check_component_results.py",
+      "bytes": 6646,
+      "sha256": "daa418bd974ffff9f5bd1e8d5ab9738b04aad03ba6cd532cacf519822bf26934"
     },
     {
-      "path": "SCRIPTS/BIGDATA/reproduce_paper.py",
-      "bytes": 3379,
-      "sha256": "d50ad9868b5606378e509bd428a3b96cf32619cdfe81169374d4365c54215cf8"
+      "path": "SCRIPTS/BIGDATA/reproduce_results.py",
+      "bytes": 2791,
+      "sha256": "528d72771469ebb0168028452f6afbbe3275dcbc08de19bb462949f811e572f8"
     },
     {
       "path": "SCRIPTS/BIGDATA/requirements-analysis.txt",
@@ -51125,18 +50865,18 @@
     },
     {
       "path": "SCRIPTS/README.md",
-      "bytes": 187,
-      "sha256": "b980b3e3f839b93df28dcbaeb97d400476541fca02a25b495d42c4e398b7a2a0"
+      "bytes": 188,
+      "sha256": "64066b40608698ab3e8ae108f439dd7f16db8755ae13d391611654d5d24f6e3f"
     },
     {
       "path": "SCRIPTS/RQ5/LIVE_EXPERIMENTS.md",
-      "bytes": 23150,
-      "sha256": "c34748bde45089dcc8ae61cec3e675a4270522f01db6ab228bbed2e2bdb262ac"
+      "bytes": 23057,
+      "sha256": "df029863aecff0ebd7564e410fd268cb05f8199677f5c72383137f19d40a6d6b"
     },
     {
       "path": "SCRIPTS/RQ5/README.md",
-      "bytes": 251,
-      "sha256": "7db3eb575d31cca597d7d270e201366bdbd8ef66f2945d38d4ceeab7907eca4e"
+      "bytes": 248,
+      "sha256": "847bb740ad76fb25bd94a66e6d5aa5023bbecf31d7e6add8e6baf7a39273fda1"
     },
     {
       "path": "SCRIPTS/RQ5/build_initial_state.sh",
@@ -51480,8 +51220,8 @@
     },
     {
       "path": "THIRD_PARTY_NOTICES.md",
-      "bytes": 674,
-      "sha256": "d9483c427085392fbff0c96ca01c45ffa8b5bf2db3bdb7d41e5c95aea49cf3af"
+      "bytes": 437,
+      "sha256": "cf4b8f7b7a3f23bf6ab44aaa5b53dd8848ce97f409f40f1b17f976f8d7825ea3"
     },
     {
       "path": "WORKFLOWS/README.md",

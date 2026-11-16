@@ -1,18 +1,13 @@
-# Live Warm-Transfer/Direct-Transfer paper records
+# Live Warm-Transfer and Direct-Transfer records
 
-Four stages, 6,000 unique successful tasks each. Warm-Transfer: cold -> warm -> new input.
-Direct-Transfer: reuse the exact Warm-Transfer cold checkpoint -> same new input; cold is not rerun.
-All stages use full auditing and online learning. Model requests exclude the
-separate 128 MiB execution allowance. The main node was downsized for Direct-Transfer.
+Four stages contain 6,000 successful tasks each. The execution sequence is original cold, original warm, Warm-Transfer on new inputs, and Direct-Transfer on the same new inputs from the shared cold checkpoint.
 
-Regenerate manuscript assets from the repository root:
+Each stage includes task records, a summary and checkpoint handoff metadata. Dataset manifests, ENA metadata and the selection record identify the original/new inputs. SHA256SUMS contains checksums for the retained records.
+
+From the repository root:
 
 ```bash
-python Big_Data_paper/Big_Data_Camera_Ready/source/Camera_Ready/build_live_assets.py
+python SCRIPTS/BIGDATA/reproduce_results.py
 ```
 
-Each stage includes its task table, summary and validated handoff. The packaged
-manifests/ENA metadata and selection report identify the datasets. Absolute paths
-inside handoffs record the original execution; regeneration uses these local copies.
-`SHA256SUMS` verifies the packaged source files. See the manuscript's
-`RESULTS_PROVENANCE.md` for definitions and interpretation limits.
+Live outputs are written to `build/reproduced-results/live/`: `results.json`, `metrics.tsv`, and `stage_details.json`. Fresh execution commands are in `SCRIPTS/RQ5/LIVE_EXPERIMENTS.md`.

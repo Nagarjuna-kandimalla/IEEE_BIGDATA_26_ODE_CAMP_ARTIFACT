@@ -1,4 +1,4 @@
-# Verification of the paper-specific release
+# Technical verification
 
 Verified on 2026-11-16. These checks distinguish retained-result reproduction from a new scientific execution.
 
@@ -10,16 +10,15 @@ Verified on 2026-11-16. These checks distinguish retained-result reproduction fr
 - Four new regression tests pass: empty/nonempty fallback labels in all four retained modeling copies; fault injection after outcome commit and before history publication, followed by restart and a contiguous second update; conflicting history file rejection; safe default thresholds and invalid override rejection.
 - Two live I/O/routing tests pass, including corrupt partial-download rejection and the explicit execution allowance. Fourteen CAMP policy/history/calibration tests pass.
 - Linux integration selfcheck passes: restore the offline seed and shared-cold checkpoint to new paths, validate model/history/calibration/SQLite consistency, verify configured source hashes, simulate Slurm submission dependencies and duplicate-submit refusal, and verify the saved-cold branch skips cold/warm.
-- Current figures/tables regenerate; the manuscript compiles to six pages with Tectonic 0.17, resolved references, and no overfull boxes. All six rendered pages were visually inspected. Known engine messages are underfull boxes and an invalid byte in an upstream algorithm.sty comment.
 
-Model/integration checks used Linux via WSL, CPython 3.9.25, numpy 1.26.4, pandas 2.3.3, LightGBM 4.6.0, scikit-learn 1.6.1 and scipy 1.13.1. Plot/build checks also ran in the local Windows analysis environment. Logs and machine-readable integration evidence are in `validation/`.
+Model/integration checks used Linux via WSL, CPython 3.9.25, numpy 1.26.4, pandas 2.3.3, LightGBM 4.6.0, scikit-learn 1.6.1 and scipy 1.13.1. Numerical analysis also ran in the local Windows analysis environment. Logs and machine-readable integration evidence are in `validation/`.
 
 ## Re-run the checks
 
 ```bash
 python SCRIPTS/RQ5/live/verify_package.py --require-tracked
 python SCRIPTS/RQ5/live/models.py verify --deep
-python SCRIPTS/BIGDATA/reproduce_paper.py --engine tectonic
+python SCRIPTS/BIGDATA/reproduce_results.py
 # Linux, with the pinned model environment:
 python -m unittest discover -s SCRIPTS/BIGDATA/tests -v
 python -m unittest discover -s SCRIPTS/RQ5/live/tests -v

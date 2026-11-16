@@ -47,3 +47,11 @@ SCRIPTS/RQ5/experiment_template/**/results/
 
 # Release verification evidence
 !DOCS/validation/*.log
+
+# Artifact repository: exclude manuscript source and exports
+/Big_Data_paper/
+*.tex
+*.bib
+*.cls
+*.bst
+*.docx
